@@ -505,6 +505,14 @@ function renderCalendar() {
     </div>
   `).join("") || '<p class="muted">Seu calendário aparecerá aqui conforme você concluir os treinos.</p>';
 }
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .catch(error => console.error("Erro PWA:", error));
+  });
+}
+</script>
 
 function init() {
   loadProfile();
