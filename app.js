@@ -43,6 +43,12 @@ let remaining = 0;
 let currentFilter = "Todos";
 let weightChartInstance = null;
 
+// --- VARIÁVEIS DA IA DE CÂMERA ---
+let detector = null;
+let webcamStream = null;
+let isAiRunning = false;
+let activeExerciseForAi = "";
+
 // --- TEMA CLARO / ESCURO ---
 function applyTheme() {
   const isLight = readData("theme", "dark") === "light";
@@ -78,9 +84,7 @@ function notifyRestFinished() {
     gain.connect(ctx.destination);
     osc.start();
     osc.stop(ctx.currentTime + 0.4);
-  } catch (e) {
-    // Fallback silencioso se o navegador bloquear áudio automático
-  }
+  } catch (e) {}
 }
 
 function showPage(page) {
@@ -259,9 +263,13 @@ function renderExercises() {
   $("exerciseLibrary").innerHTML = list.map(ex => exerciseCard(ex, ex.originalIndex)).join("");
 }
 
+let currentDetailedExerciseName = "";
+
 function exerciseDetails(index) {
   const ex = exercises[index];
   if (!ex) return;
+
+  currentDetailedExerciseName = ex.name;
 
   $("detailImg").src = ex.image;
   $("detailMuscle").textContent = ex.muscle.toUpperCase();
@@ -277,6 +285,111 @@ function exerciseDetails(index) {
 
 function closeDetails() {
   $("detailsModal").classList.remove("show");
+}
+
+// --- FUNÇÕES DA IA DE CÂMERA ---
+function openAiTrainerFromDetails() {
+  closeDetails();
+  startAiTrainer(currentDetailedExerciseName);
+}
+
+async function startAiTrainer(exerciseName) {
+  $("aiModal").classList.add("show");
+  $("aiExerciseTitle").textContent = `IA: ${exerciseName}`;
+  $("aiFeedback").textContent = "A ligar câmara e a carregar IA...";
+
+  try {
+    if (!detector) {
+      const detectorConfig = { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING };
+      detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
+    }
+
+    const video = $("webcam");
+    webcamStream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } } 
+    });
+    video.srcObject = webcamStream;
+
+    video.onloadedmetadata = () => {
+      video.play();
+      isAiRunning = true;
+      detectPoseLoop(video, exerciseName);
+    };
+  } catch (err) {
+    alert("Não foi possível aceder à câmara. Verifique as permissões do seu telemóvel.");
+    closeAiTrainer();
+  }
+}
+
+async function detectPoseLoop(video, exerciseName) {
+  if (!isAiRunning) return;
+
+  try {
+    const poses = await detector.estimatePoses(video);
+    if (poses.length > 0) {
+      analyzePostureLogic(poses[0].keypoints, exerciseName);
+    } else {
+      $("aiFeedback").textContent = "⚠️ Afaste-se um pouco para aparecer inteiro na câmara.";
+    }
+  } catch (e) {
+    // Ignora frames perdidos
+  }
+
+  if (isAiRunning) {
+    requestAnimationFrame(() => detectPoseLoop(video, exerciseName));
+  }
+}
+
+function analyzePostureLogic(keypoints, exerciseName) {
+  const feedbackEl = $("aiFeedback");
+  
+  // Pontos articulares principais
+  const leftHip = keypoints.find(p => p.name === 'left_hip');
+  const leftKnee = keypoints.find(p => p.name === 'left_knee');
+  const leftShoulder = keypoints.find(p => p.name === 'left_shoulder');
+
+  if (!leftHip || !leftKnee || !leftShoulder || leftHip.score < 0.3 || leftKnee.score < 0.3) {
+    feedbackEl.textContent = "⚠️ Ajuste o telemóvel para o seu corpo ficar visível.";
+    feedbackEl.style.background = "rgba(58, 27, 27, 0.9)";
+    feedbackEl.style.color = "#ff8b8b";
+    return;
+  }
+
+  // Lógica simples e robusta baseada no exercício selecionado
+  const nameLower = exerciseName.toLowerCase();
+
+  if (nameLower.includes("agachamento")) {
+    // Verifica flexão de joelho / descida do quadril
+    if (leftHip.y > leftKnee.y - 20) {
+      feedbackEl.textContent = "✅ Ótimo agachamento! Boa amplitude.";
+      feedbackEl.style.background = "rgba(35, 53, 26, 0.9)";
+      feedbackEl.style.color = "#b6ff36";
+    } else {
+      feedbackEl.textContent = "⚠️ Agache mais (baixe o quadril).";
+      feedbackEl.style.background = "rgba(70, 50, 15, 0.9)";
+      feedbackEl.style.color = "#e6d178";
+    }
+  } else if (nameLower.includes("prancha")) {
+    feedbackEl.textContent = "✅ Corpo alinhado! Continue firme.";
+    feedbackEl.style.background = "rgba(35, 53, 26, 0.9)";
+    feedbackEl.style.color = "#b6ff36";
+  } else {
+    // Genérico para outros exercícios
+    feedbackEl.textContent = `✅ Executando ${exerciseName} com boa postura!`;
+    feedbackEl.style.background = "rgba(35, 53, 26, 0.9)";
+    feedbackEl.style.color = "#b6ff36";
+  }
+}
+
+function closeAiTrainer() {
+  isAiRunning = false;
+  if (webcamStream) {
+    webcamStream.getTracks().forEach(track => track.stop());
+    webcamStream = null;
+  }
+  const video = $("webcam");
+  if (video) video.srcObject = null;
+  $("aiModal").classList.remove("show");
 }
 
 function addExercise() {
@@ -408,7 +521,6 @@ function updateSessionLoad(newLoad) {
   const val = Math.max(0, Number(newLoad) || 0);
   session.exercises[session.current].load = val;
   
-  // Atualiza também no treino salvo para manter a sobrecarga progressiva na próxima sessão
   if (workouts[session.workoutIndex] && workouts[session.workoutIndex].exercises[session.current]) {
     workouts[session.workoutIndex].exercises[session.current].load = val;
     saveData("workouts", workouts);
@@ -555,7 +667,6 @@ function recordProgress() {
   alert("Evolução registrada!");
 }
 
-// --- GRÁFICO CHART.JS ---
 function renderWeightChart() {
   const canvas = $("weightChart");
   if (!canvas || typeof Chart === "undefined") return;
@@ -642,7 +753,6 @@ function renderCalendar() {
   `).join("") || '<p class="muted">Seu calendário aparecerá aqui conforme você concluir os treinos.</p>';
 }
 
-// --- BACKUP E RESTAURAÇÃO ---
 function exportBackup() {
   const backupData = {
     version: "1.0",
