@@ -406,7 +406,7 @@
   </div>
 </div>
 
-<!-- MODAL DA CÂMERA DE IA -->
+<!-- MODAL DA CÂMERA DE IA COM CONTROLES FLUTUANTES -->
 <div id="aiModal" class="modal">
   <div class="modal-content ai-modal-content">
     <button class="close-modal" onclick="closeAiTrainer()">×</button>
@@ -414,8 +414,13 @@
     <h2 id="aiExerciseTitle">Analisador de Postura</h2>
     
     <div class="camera-container">
-      <video id="webcam" autoplay playsinline muted></video>
+      <!-- RESULTADO DA FILMAGEM FIXADO EM LOCAL ESPECÍFICO (TOPO DA CÂMARA) -->
       <div id="aiFeedback" class="ai-feedback-badge">Posicione-se em frente à câmara</div>
+      
+      <video id="webcam" autoplay playsinline muted></video>
+      
+      <!-- BOTÃO DE TROCAR CÂMARA (FRONTAL / TRASEIRA) -->
+      <button class="btn-switch-camera" onclick="switchCamera()" title="Mudar câmara">🔄 Mudar Câmara</button>
     </div>
 
     <p class="muted text-center" style="margin-top: 15px; font-size: 11px;">O vídeo é processado apenas no seu telemóvel e nunca é gravado.</p>
