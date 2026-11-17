@@ -12,6 +12,11 @@
   <meta name="apple-mobile-web-app-title" content="PERSONAL PRO">
   <link rel="stylesheet" href="./style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Bibliotecas de Visão Computacional para IA de Postura -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
 </head>
 <body>
 
@@ -389,12 +394,32 @@
         <p id="detailDescription"></p>
       </div>
 
-      <div class="detail-warning">
+      <!-- BOTÃO PARA ABRIR A IA DA CÂMERA -->
+      <button class="btn-primary ai-launch-btn" onclick="openAiTrainerFromDetails()">📹 CORRIGIR POSTURA COM IA</button>
+
+      <div class="detail-warning" style="margin-top: 15px;">
         ⚠️ Respeite seus limites e interrompa o exercício se sentir dor.
       </div>
 
-      <button class="btn-primary" onclick="closeDetails()">ENTENDI</button>
+      <button class="btn-outline" onclick="closeDetails()">FECHAR</button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL DA CÂMERA DE IA -->
+<div id="aiModal" class="modal">
+  <div class="modal-content ai-modal-content">
+    <button class="close-modal" onclick="closeAiTrainer()">×</button>
+    <span class="eyebrow">PERSONAL IA — CORRETOR EM TEMPO REAL</span>
+    <h2 id="aiExerciseTitle">Analisador de Postura</h2>
+    
+    <div class="camera-container">
+      <video id="webcam" autoplay playsinline muted></video>
+      <div id="aiFeedback" class="ai-feedback-badge">Posicione-se em frente à câmara</div>
+    </div>
+
+    <p class="muted text-center" style="margin-top: 15px; font-size: 11px;">O vídeo é processado apenas no seu telemóvel e nunca é gravado.</p>
+    <button class="btn-outline" onclick="closeAiTrainer()">FECHAR CÂMERA</button>
   </div>
 </div>
 
