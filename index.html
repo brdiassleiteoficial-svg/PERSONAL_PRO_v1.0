@@ -11,6 +11,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="PERSONAL PRO">
   <link rel="stylesheet" href="./style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -54,6 +55,7 @@
         <h2 id="pageTitle">Visão geral</h2>
       </div>
       <div class="user-area">
+        <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Alternar tema">☀</button>
         <div class="online-dot"></div>
         <div class="user-info">
           <strong id="headerName">Aluno</strong>
@@ -137,6 +139,18 @@
         </div>
       </div>
 
+      <!-- CONQUISTAS -->
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">GAMIFICAÇÃO</span>
+            <h3>Suas conquistas</h3>
+          </div>
+          <span class="tag-green" id="badgeCount">0/4 DESBLOQUEADAS</span>
+        </div>
+        <div class="badges-grid" id="badgesList"></div>
+      </div>
+
       <div class="panel">
         <div class="panel-heading">
           <div>
@@ -177,6 +191,8 @@
         <button onclick="filterExercises('Costas')">COSTAS</button>
         <button onclick="filterExercises('Pernas')">PERNAS</button>
         <button onclick="filterExercises('Ombros')">OMBROS</button>
+        <button onclick="filterExercises('Bíceps')">BÍCEPS</button>
+        <button onclick="filterExercises('Tríceps')">TRÍCEPS</button>
         <button onclick="filterExercises('Abdômen')">ABDÔMEN</button>
         <button onclick="filterExercises('Cardio')">CARDIO</button>
         <button onclick="filterExercises('Todos')">TODOS</button>
@@ -200,7 +216,7 @@
         <div class="form-grid">
           <div><label>Séries</label><input type="number" id="sets" value="3" min="1"></div>
           <div><label>Repetições</label><input type="number" id="reps" value="12" min="1"></div>
-          <div><label>Carga (kg)</label><input type="number" id="load" value="0" min="0" step="0.5"></div>
+          <div><label>Carga inicial (kg)</label><input type="number" id="load" value="0" min="0" step="0.5"></div>
           <div><label>Descanso (segundos)</label><input type="number" id="rest" value="60" min="0"></div>
         </div>
         <button class="btn-primary" onclick="addExercise()">+ ADICIONAR EXERCÍCIO</button>
@@ -220,7 +236,7 @@
     <section class="page" id="exercicios">
       <span class="eyebrow">CONHECIMENTO E TÉCNICA</span>
       <h2>Biblioteca de exercícios</h2>
-      <input id="exerciseSearch" placeholder="Pesquisar exercício..." oninput="renderExercises()">
+      <input id="exerciseSearch" placeholder="Pesquisar exercício ou grupo muscular..." oninput="renderExercises()">
       <div id="exerciseLibrary" class="exercise-grid"></div>
     </section>
 
@@ -236,6 +252,19 @@
         </div>
         <button class="btn-primary" onclick="recordProgress()">REGISTRAR EVOLUÇÃO</button>
       </div>
+
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">ANÁLISE VISUAL</span>
+            <h3>Gráfico de peso (kg)</h3>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="weightChart"></canvas>
+        </div>
+      </div>
+
       <div class="panel">
         <h3>Histórico de peso</h3>
         <div id="weightHistory"></div>
@@ -294,6 +323,20 @@
         <label>Limitações físicas ou observações</label>
         <textarea id="limitations" placeholder="Informe exercícios que deve evitar, limitações ou observações importantes."></textarea>
         <button class="btn-primary" onclick="saveProfile()">SALVAR MEU PERFIL</button>
+      </div>
+
+      <!-- BACKUP E RESTAURAÇÃO -->
+      <div class="panel">
+        <span class="eyebrow">SEGURANÇA DE DADOS</span>
+        <h3>Backup e Restauração</h3>
+        <p class="muted" style="margin-top: 8px;">Exporte seus treinos, perfil e histórico para não perder nada ao trocar de dispositivo.</p>
+        <div class="backup-actions">
+          <button class="btn-outline" onclick="exportBackup()">⬇ EXPORTAR BACKUP (.JSON)</button>
+          <label class="btn-outline file-upload-btn">
+            ⬆ IMPORTAR BACKUP
+            <input type="file" accept=".json" onchange="importBackup(event)" hidden>
+          </label>
+        </div>
       </div>
     </section>
 
