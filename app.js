@@ -43,11 +43,12 @@ let remaining = 0;
 let currentFilter = "Todos";
 let weightChartInstance = null;
 
-// --- VARIÁVEIS DA IA DE CÂMERA ---
+// --- VARIÁVEIS DA IA DE CÂMERA (SUPORTE A MUDAR CÂMARA) ---
 let detector = null;
 let webcamStream = null;
 let isAiRunning = false;
 let activeExerciseForAi = "";
+let useFrontCamera = true;
 
 // --- TEMA CLARO / ESCURO ---
 function applyTheme() {
@@ -287,13 +288,14 @@ function closeDetails() {
   $("detailsModal").classList.remove("show");
 }
 
-// --- FUNÇÕES DA IA DE CÂMERA ---
+// --- FUNÇÕES DA IA DE CÂMERA E TROCA DE CÂMARA ---
 function openAiTrainerFromDetails() {
   closeDetails();
   startAiTrainer(currentDetailedExerciseName);
 }
 
 async function startAiTrainer(exerciseName) {
+  activeExerciseForAi = exerciseName;
   $("aiModal").classList.add("show");
   $("aiExerciseTitle").textContent = `IA: ${exerciseName}`;
   $("aiFeedback").textContent = "A ligar câmara e a carregar IA...";
@@ -304,21 +306,44 @@ async function startAiTrainer(exerciseName) {
       detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
     }
 
-    const video = $("webcam");
-    webcamStream = await navigator.mediaDevices.getUserMedia({ 
-      video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } } 
-    });
-    video.srcObject = webcamStream;
-
-    video.onloadedmetadata = () => {
-      video.play();
-      isAiRunning = true;
-      detectPoseLoop(video, exerciseName);
-    };
+    await initCameraStream();
   } catch (err) {
     alert("Não foi possível aceder à câmara. Verifique as permissões do seu telemóvel.");
     closeAiTrainer();
   }
+}
+
+async function initCameraStream() {
+  if (webcamStream) {
+    webcamStream.getTracks().forEach(track => track.stop());
+  }
+
+  const constraints = {
+    video: { 
+      facingMode: useFrontCamera ? "user" : "environment", 
+      width: { ideal: 640 }, 
+      height: { ideal: 480 } 
+    }
+  };
+
+  webcamStream = await navigator.mediaDevices.getUserMedia(constraints);
+  const video = $("webcam");
+  video.srcObject = webcamStream;
+
+  // Espelha apenas se for a câmara frontal
+  video.style.transform = useFrontCamera ? "scaleX(-1)" : "scaleX(1)";
+
+  video.onloadedmetadata = () => {
+    video.play();
+    isAiRunning = true;
+    detectPoseLoop(video, activeExerciseForAi);
+  };
+}
+
+async function switchCamera() {
+  useFrontCamera = !useFrontCamera;
+  $("aiFeedback").textContent = "A alternar câmara...";
+  await initCameraStream();
 }
 
 async function detectPoseLoop(video, exerciseName) {
@@ -332,7 +357,7 @@ async function detectPoseLoop(video, exerciseName) {
       $("aiFeedback").textContent = "⚠️ Afaste-se um pouco para aparecer inteiro na câmara.";
     }
   } catch (e) {
-    // Ignora frames perdidos
+    // Ignora frames perdidos momentaneamente
   }
 
   if (isAiRunning) {
@@ -343,41 +368,26 @@ async function detectPoseLoop(video, exerciseName) {
 function analyzePostureLogic(keypoints, exerciseName) {
   const feedbackEl = $("aiFeedback");
   
-  // Pontos articulares principais
   const leftHip = keypoints.find(p => p.name === 'left_hip');
   const leftKnee = keypoints.find(p => p.name === 'left_knee');
-  const leftShoulder = keypoints.find(p => p.name === 'left_shoulder');
 
-  if (!leftHip || !leftKnee || !leftShoulder || leftHip.score < 0.3 || leftKnee.score < 0.3) {
+  if (!leftHip || !leftKnee || leftHip.score < 0.3 || leftKnee.score < 0.3) {
     feedbackEl.textContent = "⚠️ Ajuste o telemóvel para o seu corpo ficar visível.";
-    feedbackEl.style.background = "rgba(58, 27, 27, 0.9)";
-    feedbackEl.style.color = "#ff8b8b";
     return;
   }
 
-  // Lógica simples e robusta baseada no exercício selecionado
   const nameLower = exerciseName.toLowerCase();
 
   if (nameLower.includes("agachamento")) {
-    // Verifica flexão de joelho / descida do quadril
     if (leftHip.y > leftKnee.y - 20) {
       feedbackEl.textContent = "✅ Ótimo agachamento! Boa amplitude.";
-      feedbackEl.style.background = "rgba(35, 53, 26, 0.9)";
-      feedbackEl.style.color = "#b6ff36";
     } else {
       feedbackEl.textContent = "⚠️ Agache mais (baixe o quadril).";
-      feedbackEl.style.background = "rgba(70, 50, 15, 0.9)";
-      feedbackEl.style.color = "#e6d178";
     }
   } else if (nameLower.includes("prancha")) {
     feedbackEl.textContent = "✅ Corpo alinhado! Continue firme.";
-    feedbackEl.style.background = "rgba(35, 53, 26, 0.9)";
-    feedbackEl.style.color = "#b6ff36";
   } else {
-    // Genérico para outros exercícios
     feedbackEl.textContent = `✅ Executando ${exerciseName} com boa postura!`;
-    feedbackEl.style.background = "rgba(35, 53, 26, 0.9)";
-    feedbackEl.style.color = "#b6ff36";
   }
 }
 
