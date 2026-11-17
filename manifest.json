@@ -1,21 +1,25 @@
 
 {
-  "id": "./",
-  "name": "PERSONAL PRO - Seu Personal Trainer Inteligente",
-  "short_name": "PERSONAL PRO",
-  "description": "Seu personal trainer inteligente, disponível para acompanhar sua evolução.",
-  "lang": "pt-BR",
+  "name": "Personal Progress",
+  "short_name": "Personal",
+  "description": "Seu aplicativo pessoal de treinos e evolução física.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#080b09",
-  "theme_color": "#b6ff36",
+  "background_color": "#101820",
+  "theme_color": "#101820",
   "icons": [
     {
-      "src": "./icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any"
     }
   ]
