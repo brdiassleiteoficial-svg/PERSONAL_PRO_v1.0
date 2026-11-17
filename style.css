@@ -2,13 +2,28 @@
 
 :root {
   --bg: #080b09;
+  --sidebar-bg: #0c110d;
   --panel: #111713;
   --panel2: #171f19;
+  --input-bg: #0b100c;
   --green: #b6ff36;
-  --green2: #8cda20;
+  --green-text: #10170b;
   --white: #f6f8f5;
   --muted: #9aa49b;
   --border: #27332a;
+}
+
+body.light-theme {
+  --bg: #f2f5f3;
+  --sidebar-bg: #ffffff;
+  --panel: #ffffff;
+  --panel2: #e9efeb;
+  --input-bg: #f7faf8;
+  --green: #58a600;
+  --green-text: #ffffff;
+  --white: #111a13;
+  --muted: #5a665c;
+  --border: #d5dfd7;
 }
 
 * {
@@ -22,6 +37,7 @@ body {
   color: var(--white);
   font-family: 'Inter', sans-serif;
   font-size: 15px;
+  transition: background .25s, color .25s;
 }
 
 button, input, select, textarea {
@@ -44,7 +60,7 @@ button:hover {
 
 .sidebar {
   width: 270px;
-  background: #0c110d;
+  background: var(--sidebar-bg);
   border-right: 1px solid var(--border);
   padding: 30px 20px;
   display: flex;
@@ -65,7 +81,7 @@ button:hover {
   width: 49px;
   height: 49px;
   background: var(--green);
-  color: #10170c;
+  color: var(--green-text);
   display: grid;
   place-items: center;
   font-size: 30px;
@@ -108,7 +124,7 @@ button:hover {
 .nav-item {
   background: transparent;
   border: 0;
-  color: #aab4ab;
+  color: var(--muted);
   padding: 15px;
   border-radius: 10px;
   text-align: left;
@@ -124,7 +140,7 @@ button:hover {
 }
 
 .nav-item.active, .nav-item:hover {
-  background: #1c291d;
+  background: var(--panel2);
   color: var(--green);
 }
 
@@ -133,8 +149,8 @@ button:hover {
 }
 
 .pro-card {
-  background: linear-gradient(140deg,#263b1e,#121b12);
-  border: 1px solid #405a2c;
+  background: linear-gradient(140deg, rgba(182, 255, 54, 0.16), var(--panel));
+  border: 1px solid var(--border);
   border-radius: 15px;
   padding: 19px;
   margin-bottom: 25px;
@@ -152,13 +168,13 @@ button:hover {
 }
 
 .pro-card p {
-  color: #b7c0b4;
+  color: var(--muted);
   font-size: 12px;
   line-height: 1.6;
 }
 
 .sidebar-bottom > small {
-  color: #687269;
+  color: var(--muted);
   font-size: 10px;
 }
 
@@ -187,6 +203,18 @@ button:hover {
   gap: 12px;
 }
 
+.theme-toggle {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--white);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+
 .online-dot {
   width: 9px;
   height: 9px;
@@ -208,7 +236,7 @@ button:hover {
   width: 43px;
   height: 43px;
   background: var(--green);
-  color: #111;
+  color: var(--green-text);
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -237,6 +265,7 @@ button:hover {
   position: relative;
   margin-bottom: 35px;
   background: #1a261d;
+  color: #f6f8f5;
 }
 
 .hero > img {
@@ -267,10 +296,11 @@ button:hover {
   font-weight: 900;
   margin: 19px 0;
   letter-spacing: -2px;
+  color: #ffffff;
 }
 
 .hero h1 span {
-  color: var(--green);
+  color: #b6ff36;
 }
 
 .hero p {
@@ -283,7 +313,7 @@ button:hover {
 
 .btn-primary {
   background: var(--green);
-  color: #10170b;
+  color: var(--green-text);
   border: 0;
   border-radius: 9px;
   padding: 15px 23px;
@@ -293,13 +323,13 @@ button:hover {
 }
 
 .btn-primary:hover {
-  background: #d0ff80;
-  box-shadow: 0 0 25px #b6ff3640;
+  filter: brightness(1.08);
+  box-shadow: 0 0 20px rgba(182, 255, 54, 0.25);
 }
 
 .btn-small {
   background: var(--green);
-  color: #111;
+  color: var(--green-text);
   border: 0;
   border-radius: 7px;
   padding: 11px 14px;
@@ -317,6 +347,8 @@ button:hover {
   font-size: 12px;
   font-weight: 800;
   margin-top: 15px;
+  display: inline-block;
+  text-align: center;
 }
 
 .section-heading, .panel-heading {
@@ -334,7 +366,7 @@ button:hover {
 
 .live-tag, .tag-green {
   color: var(--green);
-  background: #23351a;
+  background: rgba(182, 255, 54, 0.14);
   padding: 9px 12px;
   border-radius: 6px;
   font-size: 10px;
@@ -424,7 +456,7 @@ button:hover {
 
 .progress-track {
   height: 9px;
-  background: #273329;
+  background: var(--panel2);
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 14px;
@@ -438,6 +470,50 @@ button:hover {
   transition: width .4s;
 }
 
+/* CONQUISTAS (BADGES) */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.badge-card {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  opacity: 0.45;
+  filter: grayscale(1);
+  transition: .3s;
+}
+
+.badge-card.unlocked {
+  opacity: 1;
+  filter: grayscale(0);
+  border-color: var(--green);
+}
+
+.badge-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.badge-card strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: var(--white);
+}
+
+.badge-card small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+  display: block;
+}
+
 .objective-grid {
   display: grid;
   grid-template-columns: repeat(3,1fr);
@@ -446,11 +522,11 @@ button:hover {
 }
 
 .objective-card {
-  background: #19211b;
+  background: var(--panel2);
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
-  color: white;
+  color: var(--white);
   text-align: left;
   padding-bottom: 15px;
 }
@@ -485,7 +561,7 @@ button:hover {
 
 .category-grid button {
   padding: 13px 18px;
-  background: #19221a;
+  background: var(--panel2);
   color: var(--green);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -501,7 +577,7 @@ button:hover {
 }
 
 .exercise-card {
-  background: #172019;
+  background: var(--panel2);
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
@@ -534,7 +610,7 @@ button:hover {
 
 label {
   display: block;
-  color: #c4cec5;
+  color: var(--muted);
   font-size: 12px;
   font-weight: 700;
   margin: 17px 0 8px;
@@ -542,10 +618,10 @@ label {
 
 input, select, textarea {
   width: 100%;
-  background: #0b100c;
-  border: 1px solid #344137;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  color: white;
+  color: var(--white);
   padding: 14px;
   outline: none;
   margin-bottom: 5px;
@@ -601,18 +677,38 @@ textarea {
 
 .saved-row button {
   background: var(--green);
+  color: var(--green-text);
   border: 0;
   border-radius: 7px;
   padding: 10px;
   font-weight: 800;
 }
 
+.backup-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.file-upload-btn {
+  cursor: pointer;
+  margin: 15px 0 0 0;
+}
+
+.chart-container {
+  position: relative;
+  height: 260px;
+  width: 100%;
+  margin-top: 15px;
+}
+
+/* MODAIS */
 .modal {
   display: none;
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: #000d;
+  background: rgba(0, 0, 0, 0.85);
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -623,7 +719,7 @@ textarea {
 }
 
 .modal-content {
-  background: #111a13;
+  background: var(--panel);
   border: 1px solid var(--green);
   border-radius: 18px;
   padding: 30px;
@@ -640,8 +736,34 @@ textarea {
   right: 20px;
   background: transparent;
   border: 0;
-  color: white;
+  color: var(--white);
   font-size: 30px;
+}
+
+.session-load-box {
+  margin-top: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.session-load-box label {
+  margin: 0;
+  font-size: 11px;
+  color: var(--green);
+}
+
+.session-load-box input {
+  width: 90px;
+  padding: 8px;
+  margin: 0;
+  text-align: center;
+  font-weight: 800;
 }
 
 .timer {
@@ -656,14 +778,15 @@ textarea {
   width: 100%;
 }
 
-/* ESTILOS DO MODAL DE DETALHES */
+/* MODAL DE DETALHES */
 .details-modal {
   padding: 0;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .details-modal .close-modal {
   background: rgba(8, 11, 9, 0.75);
+  color: #ffffff;
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -693,8 +816,8 @@ textarea {
 }
 
 .tag-dark {
-  background: #1c261e;
-  color: #c4cec5;
+  background: var(--panel2);
+  color: var(--muted);
   padding: 9px 12px;
   border-radius: 6px;
   font-size: 10px;
@@ -711,7 +834,7 @@ textarea {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  background: #0b100c;
+  background: var(--input-bg);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 15px;
@@ -738,16 +861,16 @@ textarea {
 }
 
 .detail-desc p {
-  color: #d3d9d3;
+  color: var(--white);
   font-size: 14px;
   line-height: 1.6;
   margin-top: 8px;
 }
 
 .detail-warning {
-  background: #242112;
-  border: 1px solid #4d441b;
-  color: #e6d178;
+  background: rgba(230, 209, 120, 0.12);
+  border: 1px solid rgba(230, 209, 120, 0.35);
+  color: #d4b946;
   font-size: 12px;
   padding: 12px 14px;
   border-radius: 8px;
@@ -755,7 +878,7 @@ textarea {
 }
 
 @media(max-width:1100px) {
-  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .stats-grid, .badges-grid { grid-template-columns: repeat(2,1fr); }
   .exercise-grid { grid-template-columns: repeat(2,1fr); }
 }
 
@@ -792,7 +915,7 @@ textarea {
 }
 
 @media(max-width:520px) {
-  .stats-grid, .objective-grid, .exercise-grid, .form-grid {
+  .stats-grid, .objective-grid, .exercise-grid, .form-grid, .badges-grid {
     grid-template-columns: 1fr;
   }
   .recommendation {
