@@ -41,6 +41,47 @@ let session = null;
 let timerInterval = null;
 let remaining = 0;
 let currentFilter = "Todos";
+let weightChartInstance = null;
+
+// --- TEMA CLARO / ESCURO ---
+function applyTheme() {
+  const isLight = readData("theme", "dark") === "light";
+  document.body.classList.toggle("light-theme", isLight);
+  const btn = $("themeBtn");
+  if (btn) btn.textContent = isLight ? "☾" : "☀";
+}
+
+function toggleTheme() {
+  const current = readData("theme", "dark");
+  const next = current === "dark" ? "light" : "dark";
+  saveData("theme", next);
+  applyTheme();
+  if ($("evolucao").classList.contains("active")) renderWeightChart();
+}
+
+// --- ALERTA SONORO E VIBRAÇÃO ---
+function notifyRestFinished() {
+  if ("vibrate" in navigator) {
+    navigator.vibrate([300, 150, 300]);
+  }
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.4);
+  } catch (e) {
+    // Fallback silencioso se o navegador bloquear áudio automático
+  }
+}
 
 function showPage(page) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
@@ -131,6 +172,26 @@ function setGoal(goal) {
   alert("Seu objetivo foi atualizado para " + goal + ".");
 }
 
+function renderBadges(weeklyCount) {
+  const badges = [
+    { icon: "🔥", title: "Primeiro Passo", desc: "Conclua seu 1º treino", unlocked: history.length >= 1 },
+    { icon: "⚡", title: "Semana Imbatível", desc: "Faça 4 treinos na semana", unlocked: weeklyCount >= 4 },
+    { icon: "🏆", title: "Consistência Pro", desc: "Complete 10 treinos totais", unlocked: history.length >= 10 },
+    { icon: "⚖️", title: "Foco na Meta", desc: "Registre seu peso 2+ vezes", unlocked: weights.length >= 2 }
+  ];
+
+  const unlockedCount = badges.filter(b => b.unlocked).length;
+  $("badgeCount").textContent = `${unlockedCount}/${badges.length} DESBLOQUEADAS`;
+
+  $("badgesList").innerHTML = badges.map(b => `
+    <div class="badge-card ${b.unlocked ? 'unlocked' : ''}">
+      <span class="badge-icon">${b.icon}</span>
+      <strong>${b.title}</strong>
+      <small>${b.desc}</small>
+    </div>
+  `).join("");
+}
+
 function updateDashboard() {
   const name = profile.name || "Aluno";
 
@@ -154,6 +215,8 @@ function updateDashboard() {
 
   $("weeklyProgress").textContent = percentage + "%";
   $("weeklyBar").style.width = percentage + "%";
+
+  renderBadges(weekly);
 }
 
 function populateExerciseSelect() {
@@ -301,10 +364,11 @@ function startWorkout(index) {
   if (!workout || !workout.exercises.length) return;
 
   session = {
-    name:workout.name,
-    exercises:workout.exercises.map(ex=>({...ex,completed:0})),
-    current:0,
-    started:Date.now()
+    workoutIndex: index,
+    name: workout.name,
+    exercises: workout.exercises.map(ex => ({...ex, completed: 0})),
+    current: 0,
+    started: Date.now()
   };
 
   $("workoutModal").classList.add("show");
@@ -317,7 +381,6 @@ function showSessionExercise() {
   if (!session) return;
 
   const ex = session.exercises[session.current];
-
   if (!ex) return;
 
   $("sessionExercise").innerHTML = `
@@ -326,10 +389,12 @@ function showSessionExercise() {
       <div>
         <span class="eyebrow">${ex.muscle}</span>
         <h3>${ex.name}</h3>
-        <p>Série ${ex.completed+1} de ${ex.sets}</p>
-        <p>${ex.reps} repetições • ${ex.load} kg</p>
-        <p>${ex.rest} segundos de descanso</p>
-        <p>Exercício ${session.current+1} de ${session.exercises.length}</p>
+        <p>Série ${ex.completed+1} de ${ex.sets} • ${ex.reps} repetições</p>
+        <p>${ex.rest}s descanso • Exercício ${session.current+1} de ${session.exercises.length}</p>
+        <div class="session-load-box">
+          <label for="activeLoadInput">CARGA ATUAL (KG)</label>
+          <input type="number" id="activeLoadInput" value="${ex.load}" min="0" step="0.5" onchange="updateSessionLoad(this.value)">
+        </div>
       </div>
     </div>
   `;
@@ -338,11 +403,23 @@ function showSessionExercise() {
   $("completeSet").textContent = "CONCLUIR SÉRIE";
 }
 
+function updateSessionLoad(newLoad) {
+  if (!session) return;
+  const val = Math.max(0, Number(newLoad) || 0);
+  session.exercises[session.current].load = val;
+  
+  // Atualiza também no treino salvo para manter a sobrecarga progressiva na próxima sessão
+  if (workouts[session.workoutIndex] && workouts[session.workoutIndex].exercises[session.current]) {
+    workouts[session.workoutIndex].exercises[session.current].load = val;
+    saveData("workouts", workouts);
+    renderBuilder();
+  }
+}
+
 function completeCurrentSet() {
   if (!session) return;
 
   const ex = session.exercises[session.current];
-
   ex.completed++;
 
   if (ex.completed >= ex.sets) {
@@ -368,6 +445,7 @@ function startRest(seconds) {
     if (remaining <= 0) {
       clearInterval(timerInterval);
       $("timer").textContent = "DESCANSO FINALIZADO";
+      notifyRestFinished();
     }
   },1000);
 }
@@ -477,7 +555,62 @@ function recordProgress() {
   alert("Evolução registrada!");
 }
 
+// --- GRÁFICO CHART.JS ---
+function renderWeightChart() {
+  const canvas = $("weightChart");
+  if (!canvas || typeof Chart === "undefined") return;
+
+  if (weightChartInstance) {
+    weightChartInstance.destroy();
+  }
+
+  const isLight = document.body.classList.contains("light-theme");
+  const lineColor = isLight ? "#58a600" : "#b6ff36";
+  const textColor = isLight ? "#5a665c" : "#9aa49b";
+  const gridColor = isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)";
+
+  const labels = weights.length ? weights.map(w => w.date) : ["Sem dados"];
+  const dataPoints = weights.length ? weights.map(w => w.weight) : [0];
+
+  weightChartInstance = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Peso (kg)",
+        data: dataPoints,
+        borderColor: lineColor,
+        backgroundColor: isLight ? "rgba(88, 166, 0, 0.12)" : "rgba(182, 255, 54, 0.12)",
+        borderWidth: 3,
+        pointBackgroundColor: lineColor,
+        pointRadius: 5,
+        fill: true,
+        tension: 0.35
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          ticks: { color: textColor, font: { size: 11 } },
+          grid: { color: gridColor }
+        },
+        y: {
+          ticks: { color: textColor, font: { size: 11 } },
+          grid: { color: gridColor }
+        }
+      }
+    }
+  });
+}
+
 function renderEvolution() {
+  renderWeightChart();
+
   $("weightHistory").innerHTML = weights.slice().reverse().map(item=>`
     <div class="history-row">
       <div>
@@ -509,6 +642,48 @@ function renderCalendar() {
   `).join("") || '<p class="muted">Seu calendário aparecerá aqui conforme você concluir os treinos.</p>';
 }
 
+// --- BACKUP E RESTAURAÇÃO ---
+function exportBackup() {
+  const backupData = {
+    version: "1.0",
+    exportedAt: new Date().toISOString(),
+    profile,
+    workouts,
+    history,
+    weights
+  };
+  const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `personal-pro-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.profile) { profile = data.profile; saveData("profile", profile); }
+      if (Array.isArray(data.workouts)) { workouts = data.workouts; saveData("workouts", workouts); }
+      if (Array.isArray(data.history)) { history = data.history; saveData("history", history); }
+      if (Array.isArray(data.weights)) { weights = data.weights; saveData("weights", weights); }
+      
+      init();
+      alert("Backup restaurado com sucesso!");
+    } catch {
+      alert("Arquivo de backup inválido ou corrompido.");
+    }
+    event.target.value = "";
+  };
+  reader.readAsText(file);
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js")
@@ -517,6 +692,7 @@ if ("serviceWorker" in navigator) {
 }
 
 function init() {
+  applyTheme();
   loadProfile();
   populateExerciseSelect();
   renderBuilder();
