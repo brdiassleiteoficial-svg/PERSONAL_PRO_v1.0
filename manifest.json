@@ -1,0 +1,22 @@
+
+{
+  "id": "./",
+  "name": "PERSONAL PRO - Seu Personal Trainer Inteligente",
+  "short_name": "PERSONAL PRO",
+  "description": "Seu personal trainer inteligente, disponível para acompanhar sua evolução.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080b09",
+  "theme_color": "#b6ff36",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
