@@ -200,16 +200,20 @@ function exerciseDetails(index) {
   const ex = exercises[index];
   if (!ex) return;
 
-  alert(
-    ex.name + "\n\n" +
-    "Grupo muscular: " + ex.muscle + "\n" +
-    "Equipamento: " + ex.equipment + "\n" +
-    "Séries: " + ex.sets + "\n" +
-    "Repetições: " + ex.reps + "\n" +
-    "Descanso: " + ex.rest + " segundos\n\n" +
-    "Execução:\n" + ex.description +
-    "\n\nRespeite seus limites e interrompa o exercício se sentir dor."
-  );
+  $("detailImg").src = ex.image;
+  $("detailMuscle").textContent = ex.muscle.toUpperCase();
+  $("detailEquipment").textContent = ex.equipment;
+  $("detailName").textContent = ex.name;
+  $("detailSets").textContent = ex.sets;
+  $("detailReps").textContent = ex.reps;
+  $("detailRest").textContent = ex.rest + "s";
+  $("detailDescription").textContent = ex.description;
+
+  $("detailsModal").classList.add("show");
+}
+
+function closeDetails() {
+  $("detailsModal").classList.remove("show");
 }
 
 function addExercise() {
