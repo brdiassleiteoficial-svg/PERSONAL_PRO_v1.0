@@ -1,0 +1,25 @@
+PERSONAL PRO — versão inicial local
+
+COMO ABRIR
+1. Extraia o arquivo ZIP.
+2. Abra a pasta personal_pro.
+3. Dê dois cliques em index.html para abrir no navegador.
+
+O QUE JÁ FUNCIONA
+- Perfil do aluno salvo no navegador.
+- Painel com indicadores e gráfico de peso.
+- Biblioteca inicial de exercícios com instruções.
+- Montador de treinos com séries, repetições, carga e descanso.
+- Salvar, editar e iniciar treinos.
+- Sessão de treino com progresso e cronômetro de descanso.
+- Histórico de sessões.
+- Registro de medidas e evolução.
+- Calculadora de calorias estimadas por MET.
+- Assistente local com orientações pré-configuradas.
+
+IMPORTANTE
+Esta é uma versão local inicial. Os dados ficam no armazenamento do navegador
+(localStorage), neste dispositivo e neste navegador. Não há contas online,
+sincronização, recuperação de senha, painel administrativo multiusuário ou IA
+conectada nesta etapa. A próxima fase será conectar banco de dados e autenticação
+reais (por exemplo, Supabase), além de adicionar imagens demonstrativas próprias/licenciadas.
