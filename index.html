@@ -314,6 +314,47 @@
   </div>
 </div>
 
+<!-- MODAL DE DETALHES DO EXERCÍCIO -->
+<div id="detailsModal" class="modal" onclick="if(event.target === this) closeDetails()">
+  <div class="modal-content details-modal">
+    <button class="close-modal" onclick="closeDetails()">×</button>
+    <img id="detailImg" src="" alt="" class="detail-cover">
+    <div class="detail-body">
+      <div class="detail-tags">
+        <span class="tag-green" id="detailMuscle"></span>
+        <span class="tag-dark" id="detailEquipment"></span>
+      </div>
+      <h2 id="detailName"></h2>
+      
+      <div class="detail-specs">
+        <div>
+          <small>SÉRIES</small>
+          <strong id="detailSets"></strong>
+        </div>
+        <div>
+          <small>REPETIÇÕES</small>
+          <strong id="detailReps"></strong>
+        </div>
+        <div>
+          <small>DESCANSO</small>
+          <strong id="detailRest"></strong>
+        </div>
+      </div>
+
+      <div class="detail-desc">
+        <span class="eyebrow">COMO EXECUTAR</span>
+        <p id="detailDescription"></p>
+      </div>
+
+      <div class="detail-warning">
+        ⚠️ Respeite seus limites e interrompa o exercício se sentir dor.
+      </div>
+
+      <button class="btn-primary" onclick="closeDetails()">ENTENDI</button>
+    </div>
+  </div>
+</div>
+
 <script src="./app.js"></script>
 </body>
 </html>
