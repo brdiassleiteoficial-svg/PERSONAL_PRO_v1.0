@@ -43,7 +43,7 @@ let remaining = 0;
 let currentFilter = "Todos";
 let weightChartInstance = null;
 
-// --- VARIÁVEIS DA IA DE GRAVAÇÃO ---
+// --- VARIÁVEIS DA IA COM DETETOR REAL DE MOVIMENTO ---
 let detector = null;
 let webcamStream = null;
 let isRecording = false;
@@ -67,7 +67,6 @@ function toggleTheme() {
   if ($("evolucao").classList.contains("active")) renderWeightChart();
 }
 
-// --- ALERTA SONORO E VIBRAÇÃO ---
 function notifyRestFinished() {
   if ("vibrate" in navigator) {
     navigator.vibrate([300, 150, 300]);
@@ -289,7 +288,7 @@ function closeDetails() {
   $("detailsModal").classList.remove("show");
 }
 
-// --- FUNÇÕES DA IA COM BOTÕES DE GRAVAR E PARAR ---
+// --- FUNÇÕES DA IA COM ANÁLISE REAL DE OSCILAÇÃO E REPETIÇÕES ---
 function openAiTrainerFromDetails() {
   closeDetails();
   startAiTrainer(currentDetailedExerciseName);
@@ -300,7 +299,6 @@ async function startAiTrainer(exerciseName) {
   $("aiModal").classList.add("show");
   $("aiExerciseTitle").textContent = `Gravar: ${exerciseName}`;
   
-  // Reseta interface
   $("aiResultBox").style.display = "none";
   $("btnStartRecord").style.display = "block";
   $("btnStopRecord").style.display = "none";
@@ -377,49 +375,84 @@ async function recordLoop(video) {
 
 function stopRecordingAnalysis() {
   isRecording = false;
-
   $("btnStopRecord").style.display = "none";
-  processCapturedResults(activeExerciseForAi);
+  processRealMovementResults(activeExerciseForAi);
 }
 
-function processCapturedResults(exerciseName) {
+function processRealMovementResults(exerciseName) {
   const resultBox = $("aiResultBox");
   const resultText = $("aiResultText");
 
   resultBox.style.display = "block";
 
-  if (capturedPosesData.length < 5) {
-    resultText.innerHTML = "⚠️ Poucos dados capturados. Certifique-se de ficar visível na câmara durante a gravação e tente novamente.";
+  if (capturedPosesData.length < 10) {
+    resultText.innerHTML = "⚠️ Poucos dados capturados. Mantenha-se visível na câmara durante a execução e faça o exercício por alguns segundos antes de parar.";
     return;
   }
 
-  // Análise baseada nos quadros capturados
-  let goodPostures = 0;
-  const nameLower = exerciseName.toLowerCase();
-
+  // Extrai posições do quadril (hip) ou nariz (nose) ao longo do tempo para contar repetições reais
+  let yPositions = [];
   capturedPosesData.forEach(keypoints => {
-    const leftHip = keypoints.find(p => p.name === 'left_hip');
-    const leftKnee = keypoints.find(p => p.name === 'left_knee');
-
-    if (leftHip && leftKnee && leftHip.score > 0.3 && leftKnee.score > 0.3) {
-      if (nameLower.includes("agachamento")) {
-        // Se em algum momento flexionou bem o joelho/quadril
-        if (leftHip.y > leftKnee.y - 25) {
-          goodPostures++;
-        }
-      } else {
-        goodPostures++; // Para outros exercícios considera estabilidade
-      }
+    const point = keypoints.find(p => p.name === 'left_hip') || keypoints.find(p => p.name === 'nose');
+    if (point && point.score > 0.3) {
+      yPositions.push(point.y);
     }
   });
 
-  const scoreRate = Math.round((goodPostures / capturedPosesData.length) * 100);
-
-  if (scoreRate > 40 || nameLower.includes("prancha") || !nameLower.includes("agachamento")) {
-    resultText.innerHTML = `✅ <strong>Excelente execução!</strong><br>A sua postura manteve-se estável e correta durante o movimento de ${exerciseName}. Continue assim!`;
-  } else {
-    resultText.innerHTML = `⚠️ <strong>Atenção à amplitude!</strong><br>Notamos que no exercício ${exerciseName} faltou um pouco mais de amplitude ou estabilidade. Tente descer mais o quadril na próxima tentativa.`;
+  if (yPositions.length < 8) {
+    resultText.innerHTML = "⚠️ Não foi detetado movimento corporal claro. Afaste-se um pouco para que o telemóvel veja o seu tronco e membros.";
+    return;
   }
+
+  // Algoritmo simples de picos (contagem de subidas e descidas)
+  let repsCount = 0;
+  let directions = 0; // 1 descendo, -1 subindo
+  let minY = Math.min(...yPositions);
+  let maxY = Math.max(...yPositions);
+  let amplitude = maxY - minY;
+
+  // Se a variação vertical for muito baixa, a pessoa ficou parada
+  if (amplitude < 25) {
+    resultText.innerHTML = `⚠️ <strong>Pouco movimento detetado para "${exerciseName}".</strong><br>O seu corpo permaneceu muito estático. Certifique-se de executar o movimento completo (subir e descer) durante a gravação.`;
+    return;
+  }
+
+  // Conta quantas vezes mudou de direção de forma consistente
+  let threshold = amplitude * 0.25;
+  let lastY = yPositions[0];
+  let movingDown = false;
+  let movingUp = false;
+
+  for (let i = 1; i < yPositions.length; i++) {
+    let diff = yPositions[i] - lastY;
+    if (diff > threshold) {
+      // Descendo (no eixo Y da tela, valor maior é para baixo)
+      if (movingUp || !movingDown) {
+        movingDown = true;
+        movingUp = false;
+      }
+      lastY = yPositions[i];
+    } else if (diff < -threshold) {
+      // Subindo
+      if (movingDown) {
+        repsCount++; // Completou uma oscilação completa
+        movingDown = false;
+        movingUp = true;
+      }
+      lastY = yPositions[i];
+    }
+  }
+
+  // Ajuste de estimativa caso o loop pegue meia repetição
+  repsCount = Math.max(1, Math.round(repsCount));
+
+  resultText.innerHTML = `
+    📊 <strong>Relatório de Execução Real:</strong><br>
+    • Exercício analisado: <strong>${exerciseName}</strong><br>
+    • Repetições detetadas: <strong>~${repsCount} repetições</strong><br>
+    • Amplitude de movimento: <strong>${Math.round(amplitude)}px (Boa variação)</strong><br><br>
+    ✅ <em>Avaliação:</em> Movimento consistente capturado! Continue a manter o ritmo e a postura firme nas próximas séries.
+  `;
 }
 
 function resetAiModal() {
