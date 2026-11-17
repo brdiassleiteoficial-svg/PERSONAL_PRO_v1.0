@@ -43,12 +43,13 @@ let remaining = 0;
 let currentFilter = "Todos";
 let weightChartInstance = null;
 
-// --- VARIÁVEIS DA IA DE CÂMERA (SUPORTE A MUDAR CÂMARA) ---
+// --- VARIÁVEIS DA IA DE GRAVAÇÃO ---
 let detector = null;
 let webcamStream = null;
-let isAiRunning = false;
+let isRecording = false;
 let activeExerciseForAi = "";
 let useFrontCamera = true;
+let capturedPosesData = [];
 
 // --- TEMA CLARO / ESCURO ---
 function applyTheme() {
@@ -288,7 +289,7 @@ function closeDetails() {
   $("detailsModal").classList.remove("show");
 }
 
-// --- FUNÇÕES DA IA DE CÂMERA E TROCA DE CÂMARA ---
+// --- FUNÇÕES DA IA COM BOTÕES DE GRAVAR E PARAR ---
 function openAiTrainerFromDetails() {
   closeDetails();
   startAiTrainer(currentDetailedExerciseName);
@@ -297,8 +298,12 @@ function openAiTrainerFromDetails() {
 async function startAiTrainer(exerciseName) {
   activeExerciseForAi = exerciseName;
   $("aiModal").classList.add("show");
-  $("aiExerciseTitle").textContent = `IA: ${exerciseName}`;
-  $("aiFeedback").textContent = "A ligar câmara e a carregar IA...";
+  $("aiExerciseTitle").textContent = `Gravar: ${exerciseName}`;
+  
+  // Reseta interface
+  $("aiResultBox").style.display = "none";
+  $("btnStartRecord").style.display = "block";
+  $("btnStopRecord").style.display = "none";
 
   try {
     if (!detector) {
@@ -329,70 +334,101 @@ async function initCameraStream() {
   webcamStream = await navigator.mediaDevices.getUserMedia(constraints);
   const video = $("webcam");
   video.srcObject = webcamStream;
-
-  // Espelha apenas se for a câmara frontal
   video.style.transform = useFrontCamera ? "scaleX(-1)" : "scaleX(1)";
 
   video.onloadedmetadata = () => {
     video.play();
-    isAiRunning = true;
-    detectPoseLoop(video, activeExerciseForAi);
   };
 }
 
 async function switchCamera() {
   useFrontCamera = !useFrontCamera;
-  $("aiFeedback").textContent = "A alternar câmara...";
   await initCameraStream();
 }
 
-async function detectPoseLoop(video, exerciseName) {
-  if (!isAiRunning) return;
+function startRecordingAnalysis() {
+  isRecording = true;
+  capturedPosesData = [];
+
+  $("btnStartRecord").style.display = "none";
+  $("btnStopRecord").style.display = "block";
+  $("aiResultBox").style.display = "none";
+
+  const video = $("webcam");
+  recordLoop(video);
+}
+
+async function recordLoop(video) {
+  if (!isRecording) return;
 
   try {
     const poses = await detector.estimatePoses(video);
     if (poses.length > 0) {
-      analyzePostureLogic(poses[0].keypoints, exerciseName);
-    } else {
-      $("aiFeedback").textContent = "⚠️ Afaste-se um pouco para aparecer inteiro na câmara.";
+      capturedPosesData.push(poses[0].keypoints);
     }
   } catch (e) {
-    // Ignora frames perdidos momentaneamente
+    // Ignora frame isolado
   }
 
-  if (isAiRunning) {
-    requestAnimationFrame(() => detectPoseLoop(video, exerciseName));
+  if (isRecording) {
+    requestAnimationFrame(() => recordLoop(video));
   }
 }
 
-function analyzePostureLogic(keypoints, exerciseName) {
-  const feedbackEl = $("aiFeedback");
-  
-  const leftHip = keypoints.find(p => p.name === 'left_hip');
-  const leftKnee = keypoints.find(p => p.name === 'left_knee');
+function stopRecordingAnalysis() {
+  isRecording = false;
 
-  if (!leftHip || !leftKnee || leftHip.score < 0.3 || leftKnee.score < 0.3) {
-    feedbackEl.textContent = "⚠️ Ajuste o telemóvel para o seu corpo ficar visível.";
+  $("btnStopRecord").style.display = "none";
+  processCapturedResults(activeExerciseForAi);
+}
+
+function processCapturedResults(exerciseName) {
+  const resultBox = $("aiResultBox");
+  const resultText = $("aiResultText");
+
+  resultBox.style.display = "block";
+
+  if (capturedPosesData.length < 5) {
+    resultText.innerHTML = "⚠️ Poucos dados capturados. Certifique-se de ficar visível na câmara durante a gravação e tente novamente.";
     return;
   }
 
+  // Análise baseada nos quadros capturados
+  let goodPostures = 0;
   const nameLower = exerciseName.toLowerCase();
 
-  if (nameLower.includes("agachamento")) {
-    if (leftHip.y > leftKnee.y - 20) {
-      feedbackEl.textContent = "✅ Ótimo agachamento! Boa amplitude.";
-    } else {
-      feedbackEl.textContent = "⚠️ Agache mais (baixe o quadril).";
+  capturedPosesData.forEach(keypoints => {
+    const leftHip = keypoints.find(p => p.name === 'left_hip');
+    const leftKnee = keypoints.find(p => p.name === 'left_knee');
+
+    if (leftHip && leftKnee && leftHip.score > 0.3 && leftKnee.score > 0.3) {
+      if (nameLower.includes("agachamento")) {
+        // Se em algum momento flexionou bem o joelho/quadril
+        if (leftHip.y > leftKnee.y - 25) {
+          goodPostures++;
+        }
+      } else {
+        goodPostures++; // Para outros exercícios considera estabilidade
+      }
     }
-  } else if (nameLower.includes("prancha")) {
-    feedbackEl.textContent = "✅ Corpo alinhado! Continue firme.";
+  });
+
+  const scoreRate = Math.round((goodPostures / capturedPosesData.length) * 100);
+
+  if (scoreRate > 40 || nameLower.includes("prancha") || !nameLower.includes("agachamento")) {
+    resultText.innerHTML = `✅ <strong>Excelente execução!</strong><br>A sua postura manteve-se estável e correta durante o movimento de ${exerciseName}. Continue assim!`;
   } else {
-    feedbackEl.textContent = `✅ Executando ${exerciseName} com boa postura!`;
+    resultText.innerHTML = `⚠️ <strong>Atenção à amplitude!</strong><br>Notamos que no exercício ${exerciseName} faltou um pouco mais de amplitude ou estabilidade. Tente descer mais o quadril na próxima tentativa.`;
   }
 }
 
+function resetAiModal() {
+  $("aiResultBox").style.display = "none";
+  $("btnStartRecord").style.display = "block";
+}
+
 function closeAiTrainer() {
-  isAiRunning = false;
+  isRecording = false;
   if (webcamStream) {
     webcamStream.getTracks().forEach(track => track.stop());
     webcamStream = null;
