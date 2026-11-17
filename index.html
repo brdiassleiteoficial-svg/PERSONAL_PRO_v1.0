@@ -1,248 +1,315 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0b0d0c">
-<title>PERSONAL PRO | Seu Personal Trainer Inteligente</title>
-<style>
-:root{--bg:#090b0a;--panel:#111512;--panel2:#171d19;--line:#273129;--green:#b7ff36;--green2:#8ed51f;--text:#f4f7f2;--muted:#9ba69d;--red:#ff6868;--radius:18px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 85% -10%,#1d2b17 0,transparent 28%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:245px;padding:25px 17px;background:#0d100e;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:10}.brand{display:flex;align-items:center;gap:11px;padding:0 9px 32px}.brand-mark{width:39px;height:39px;border-radius:13px;background:var(--green);color:#111;font-weight:1000;display:grid;place-items:center;font-size:21px;box-shadow:0 0 28px #b7ff3640}.brand strong{font-size:17px;letter-spacing:1.5px}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;margin-top:2px}.nav-label{font-size:10px;color:#6f7b71;letter-spacing:1.8px;padding:14px 12px 9px}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#aab4ac;text-align:left;padding:12px 13px;border-radius:12px;display:flex;align-items:center;gap:12px;font-weight:650;font-size:13px;transition:.2s}.nav button:hover,.nav button.active{background:#1b241b;color:var(--green)}.nav .ico{width:20px;text-align:center;font-size:17px}.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:18px 8px 0;color:var(--muted);font-size:11px;line-height:1.6}.local-pill{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-size:10px;margin-top:8px}.local-pill:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
-.main{margin-left:245px;padding:27px 34px 50px;max-width:1600px}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;gap:15px}.eyebrow{font-size:10px;color:var(--green);letter-spacing:2px;font-weight:800}.topbar h1{font-size:25px;margin:5px 0 0;letter-spacing:-.8px}.top-actions{display:flex;align-items:center;gap:12px}.date-chip,.avatar{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 13px;color:var(--muted);font-size:12px}.avatar{width:42px;height:42px;padding:0;display:grid;place-items:center;color:var(--green);font-weight:900;border-radius:50%;font-size:14px}
-.page{display:none;animation:fade .25s ease}.page.active{display:block}@keyframes fade{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}
-.hero{background:linear-gradient(110deg,#182319 0%,#121a13 48%,#172414 100%);border:1px solid #34442e;border-radius:24px;padding:27px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;position:relative;overflow:hidden;margin-bottom:20px}.hero:after{content:"PRO";position:absolute;right:4%;top:-30px;font-size:145px;font-weight:1000;color:#b7ff3609;letter-spacing:-10px;pointer-events:none}.hero-copy{position:relative;z-index:1}.hero h2{font-size:clamp(25px,3vw,36px);margin:8px 0 8px;letter-spacing:-1.4px}.hero p{margin:0;color:#b5c0b5;font-size:13px;max-width:480px;line-height:1.6}.hero-actions{display:flex;gap:10px;position:relative;z-index:1;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 17px;font-size:12px;font-weight:850;transition:.2s}.btn-primary{background:var(--green);color:#10140c;box-shadow:0 7px 22px #b7ff3620}.btn-primary:hover{background:#cbff69;transform:translateY(-1px)}.btn-secondary{background:#202a21;color:#e9f2e8;border:1px solid #344334}.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}.btn-danger{background:#351b1b;color:#ff9999;border:1px solid #603333}.btn-small{padding:8px 11px;font-size:11px}
-.grid{display:grid;gap:15px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:20px}.card{background:linear-gradient(145deg,#141916,#101411);border:1px solid var(--line);border-radius:var(--radius);padding:18px;min-width:0}.stat-head{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px}.stat-icon{width:30px;height:30px;border-radius:10px;background:#26351d;color:var(--green);display:grid;place-items:center;font-size:15px}.stat-value{font-size:27px;font-weight:850;letter-spacing:-1px;margin:13px 0 4px}.stat-foot{font-size:10px;color:#849087}.accent{color:var(--green)}.two-col{grid-template-columns:minmax(0,1.4fr) minmax(270px,.9fr)}.section-head{display:flex;align-items:center;justify-content:space-between;margin:2px 0 13px;gap:10px}.section-head h3{font-size:15px;margin:0}.section-head span{font-size:10px;color:var(--muted)}.workout-feature{display:flex;align-items:center;gap:16px;background:#182018;border:1px solid #344331;border-radius:15px;padding:15px}.workout-art{width:82px;height:82px;border-radius:13px;background:linear-gradient(145deg,#344b24,#19231a);display:grid;place-items:center;font-size:34px;flex-shrink:0}.workout-feature h4{margin:0 0 5px;font-size:14px}.workout-feature p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}.workout-feature .btn{margin-left:auto;white-space:nowrap}.activity-list{display:grid;gap:12px}.activity{display:flex;align-items:center;gap:11px}.activity-icon{width:34px;height:34px;background:#1c251d;border-radius:11px;display:grid;place-items:center}.activity strong{display:block;font-size:11px}.activity small{color:var(--muted);font-size:10px}.activity time{margin-left:auto;color:var(--muted);font-size:10px}
-.progress-track{height:7px;background:#29312a;border-radius:20px;overflow:hidden;margin:10px 0}.progress-track span{display:block;height:100%;background:var(--green);border-radius:20px}.goal-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}.chart-wrap{height:210px;position:relative;margin-top:10px}.chart-wrap canvas{width:100%;height:100%}
-.page-title{display:flex;justify-content:space-between;align-items:flex-end;margin:5px 0 22px;gap:15px}.page-title h2{font-size:26px;margin:5px 0}.page-title p{color:var(--muted);font-size:12px;margin:0}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:grid;gap:6px}.field label{font-size:11px;color:#aeb8af;font-weight:700}.field input,.field select,.field textarea,.search{width:100%;background:#0c100d;border:1px solid #303a31;border-radius:11px;padding:11px 12px;color:var(--text);outline:none;font-size:12px}.field input:focus,.field select:focus,.field textarea:focus,.search:focus{border-color:var(--green)}.field textarea{min-height:78px;resize:vertical}.field.full{grid-column:1/-1}.muted{color:var(--muted)}.small{font-size:10px}.chips{display:flex;flex-wrap:wrap;gap:7px}.chip{border:1px solid #354035;background:#151c16;color:#bdc8be;border-radius:30px;padding:7px 11px;font-size:10px}.chip.selected{border-color:var(--green);color:var(--green);background:#202d18}
-.exercise-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.exercise-card{padding:0;overflow:hidden}.exercise-visual{height:115px;background:radial-gradient(circle at 50% 20%,#344b26,#182019 70%);display:grid;place-items:center;font-size:42px;position:relative}.exercise-visual small{position:absolute;left:12px;top:11px;background:#0b100caa;padding:5px 8px;border-radius:20px;color:var(--green);font-size:9px}.exercise-body{padding:14px}.exercise-body h4{margin:0 0 5px;font-size:13px}.exercise-body p{margin:0 0 12px;color:var(--muted);font-size:10px}.exercise-meta{display:flex;justify-content:space-between;color:#9eaa9f;font-size:10px}
-.builder-layout{grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr)}.exercise-pick{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #263027}.exercise-pick:last-child{border:0}.pick-icon{width:39px;height:39px;border-radius:11px;background:#202b20;display:grid;place-items:center;font-size:19px}.pick-info{flex:1}.pick-info strong{font-size:12px;display:block}.pick-info small{font-size:10px;color:var(--muted)}.builder-item{border:1px solid #2b352c;border-radius:13px;padding:12px;margin-bottom:9px;background:#111712}.builder-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.builder-item-top strong{font-size:12px}.inline-fields{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.inline-fields label{font-size:9px;color:var(--muted);display:grid;gap:4px}.inline-fields input{width:100%;min-width:0;background:#0a0e0b;border:1px solid #303a31;border-radius:8px;color:white;padding:7px;font-size:11px}
-.session-box{max-width:780px;margin:0 auto}.session-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.session-exercise{text-align:center;padding:30px 15px;background:linear-gradient(145deg,#1b2819,#111713);border:1px solid #3a4a34;border-radius:20px}.session-emoji{font-size:65px;margin-bottom:12px}.session-exercise h2{margin:0 0 6px}.session-exercise p{margin:0;color:var(--muted);font-size:12px}.session-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.session-number{background:var(--panel);border:1px solid var(--line);border-radius:14px;text-align:center;padding:14px}.session-number strong{display:block;font-size:22px;color:var(--green)}.session-number small{color:var(--muted);font-size:10px}.timer{font-size:48px;font-weight:900;letter-spacing:2px;color:var(--green);text-align:center;margin:15px}.session-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
-.record-list{display:grid;gap:9px}.record{display:flex;align-items:center;gap:12px;padding:12px;background:#131914;border:1px solid var(--line);border-radius:12px}.record-main{flex:1}.record strong{font-size:12px}.record small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.record-value{color:var(--green);font-weight:800;font-size:13px}
-.bottom-nav{display:none}.empty{padding:30px;text-align:center;color:var(--muted);font-size:12px;border:1px dashed #354035;border-radius:14px}.toast{position:fixed;right:22px;bottom:22px;background:#d0ff85;color:#10150c;padding:12px 17px;border-radius:12px;font-size:12px;font-weight:800;box-shadow:0 12px 35px #0008;z-index:99;opacity:0;transform:translateY(12px);transition:.25s;pointer-events:none}.toast.show{opacity:1;transform:none}
-.modal-backdrop{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal-backdrop.show{display:flex}.modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:#111713;border:1px solid #39453a;border-radius:20px;padding:22px;box-shadow:0 25px 90px #000b}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.modal-head h3{margin:0}.close{border:0;background:#273128;color:white;border-radius:9px;width:32px;height:32px;font-size:18px}
-.mobile-menu{display:none}
-@media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.exercise-grid{grid-template-columns:repeat(2,1fr)}.main{padding:24px}}
-@media(max-width:760px){.sidebar{display:none}.main{margin:0;padding:18px 14px 92px}.topbar{margin-bottom:20px}.topbar h1{font-size:21px}.date-chip{display:none}.hero{padding:22px;display:block}.hero-actions{margin-top:17px}.hero:after{font-size:100px;top:0}.stats{gap:9px}.card{padding:14px}.stat-value{font-size:23px}.two-col,.builder-layout{grid-template-columns:1fr}.exercise-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.exercise-visual{height:90px}.exercise-body{padding:11px}.exercise-body h4{font-size:11px}.page-title{align-items:flex-start;flex-direction:column}.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#0d110e;border-top:1px solid var(--line);z-index:20;justify-content:space-around;padding:8px 4px calc(8px + env(safe-area-inset-bottom))}.bottom-nav button{border:0;background:transparent;color:#88948a;font-size:9px;display:grid;gap:3px;justify-items:center;padding:4px}.bottom-nav button span{font-size:18px}.bottom-nav button.active{color:var(--green)}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.inline-fields{grid-template-columns:repeat(2,1fr)}.session-numbers{gap:6px}.session-number{padding:10px 5px}.session-number strong{font-size:19px}.hero h2{font-size:26px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b09">
+  <title>PERSONAL PRO | Seu Personal Trainer Inteligente</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div class="app">
-<aside class="sidebar">
-  <div class="brand"><div class="brand-mark">P</div><div><strong>PERSONAL PRO</strong><small>TRAIN SMARTER. LIVE STRONGER.</small></div></div>
-  <div class="nav-label">MENU PRINCIPAL</div>
-  <nav class="nav" id="sideNav">
-    <button class="active" data-page="home"><span class="ico">⌂</span>Início</button>
-    <button data-page="training"><span class="ico">◈</span>Treinos</button>
-    <button data-page="builder"><span class="ico">＋</span>Montar treino</button>
-    <button data-page="progress"><span class="ico">↗</span>Minha evolução</button>
-    <button data-page="profile"><span class="ico">◎</span>Meu perfil</button>
-  </nav>
-  <div class="nav-label">FERRAMENTAS</div>
-  <nav class="nav">
-    <button data-page="calories"><span class="ico">◉</span>Calculadora de calorias</button>
-    <button data-page="assistant"><span class="ico">✦</span>Personal inteligente</button>
-  </nav>
-  <div class="sidebar-bottom">PERSONAL PRO • VERSÃO INICIAL<br>Seus dados ficam neste dispositivo.<div class="local-pill">Modo local ativo</div></div>
-</aside>
-<main class="main">
-  <header class="topbar">
-    <div><div class="eyebrow">SEU TREINO. SUA EVOLUÇÃO.</div><h1 id="pageHeading">Painel do aluno</h1></div>
-    <div class="top-actions"><div class="date-chip" id="todayDate"></div><div class="avatar" id="avatar">PP</div></div>
-  </header>
 
-  <section class="page active" id="page-home">
-    <div class="hero">
-      <div class="hero-copy"><div class="eyebrow">BEM-VINDO AO PERSONAL PRO</div><h2>Olá, <span class="accent" id="helloName">Atleta</span>! Vamos evoluir?</h2><p>Seu próximo nível começa com consistência. Acompanhe seus resultados e mantenha o foco no que importa.</p></div>
-      <div class="hero-actions"><button class="btn btn-primary" onclick="navigate('builder')">＋ MONTAR MEU TREINO</button><button class="btn btn-secondary" onclick="openProfile()">EDITAR PERFIL</button></div>
-    </div>
-    <div class="grid stats">
-      <div class="card"><div class="stat-head">PESO ATUAL <span class="stat-icon">⚖</span></div><div class="stat-value" id="statWeight">— <small style="font-size:13px">kg</small></div><div class="stat-foot" id="statWeightFoot">Cadastre seu peso no perfil</div></div>
-      <div class="card"><div class="stat-head">TREINOS NA SEMANA <span class="stat-icon">▦</span></div><div class="stat-value" id="statWorkouts">0</div><div class="stat-foot">Sessões concluídas nesta semana</div></div>
-      <div class="card"><div class="stat-head">TEMPO DE ATIVIDADE <span class="stat-icon">◷</span></div><div class="stat-value" id="statMinutes">0 <small style="font-size:13px">min</small></div><div class="stat-foot">Tempo registrado nesta semana</div></div>
-      <div class="card"><div class="stat-head">CALORIAS ESTIMADAS <span class="stat-icon">♨</span></div><div class="stat-value" id="statCalories">0</div><div class="stat-foot">Estimativa dos treinos registrados</div></div>
-    </div>
-    <div class="grid two-col">
-      <div class="card">
-        <div class="section-head"><h3>Treino recomendado</h3><span>PLANO PESSOAL</span></div>
-        <div class="workout-feature"><div class="workout-art">🏋️</div><div><h4 id="recommendedTitle">Comece montando seu treino</h4><p id="recommendedDesc">Escolha os grupos musculares e organize sua rotina.</p></div><button class="btn btn-primary btn-small" onclick="navigate('builder')">CRIAR</button></div>
-        <div class="section-head" style="margin-top:22px"><h3>Evolução do peso</h3><span>ÚLTIMOS REGISTROS</span></div>
-        <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="section-head"><h3>Meta de peso</h3><span>OBJETIVO</span></div>
-        <div style="display:flex;align-items:baseline;gap:7px;margin-top:18px"><strong style="font-size:31px" id="goalWeight">—</strong><span class="muted small">kg desejados</span></div>
-        <div class="progress-track"><span id="goalProgress" style="width:0%"></span></div>
-        <div class="goal-row"><span>Progresso registrado</span><strong class="accent" id="goalPercent">0%</strong></div>
-        <div class="section-head" style="margin-top:27px"><h3>Atividades recentes</h3><span>HISTÓRICO</span></div>
-        <div class="activity-list" id="recentActivities"><div class="empty">Suas atividades aparecerão aqui.</div></div>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">P</span>
+      <div>
+        <h2>PERSONAL<span>PRO</span></h2>
+        <small>SEU PERSONAL INTELIGENTE</small>
       </div>
     </div>
-  </section>
 
-  <section class="page" id="page-training">
-    <div class="page-title"><div><div class="eyebrow">SEU PLANO DE AÇÃO</div><h2>Central de treinos</h2><p>Explore exercícios e organize seu treinamento por objetivo.</p></div></div>
-    <div class="grid stats" style="grid-template-columns:repeat(3,minmax(0,1fr))">
-      <div class="card" style="cursor:pointer" onclick="filterExercises('Hipertrofia')"><div class="stat-icon">💪</div><h3 style="font-size:14px">Hipertrofia</h3><p class="muted small">Força e desenvolvimento muscular</p></div>
-      <div class="card" style="cursor:pointer" onclick="filterExercises('Cardio')"><div class="stat-icon">🏃</div><h3 style="font-size:14px">Emagrecimento e cardio</h3><p class="muted small">Condicionamento e atividade aeróbica</p></div>
-      <div class="card" style="cursor:pointer" onclick="filterExercises('Abdômen')"><div class="stat-icon">⚡</div><h3 style="font-size:14px">Abdômen</h3><p class="muted small">Estabilidade e força do core</p></div>
-    </div>
-    <div class="section-head"><h3>Biblioteca de exercícios</h3><span id="exerciseCount">EXERCÍCIOS</span></div>
-    <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px"><input class="search" id="exerciseSearch" placeholder="Pesquisar exercício ou músculo..." style="max-width:330px" oninput="renderExercises()"><select class="search" id="exerciseFilter" style="max-width:190px" onchange="renderExercises()"><option value="Todos">Todos os grupos</option><option>Peito</option><option>Costas</option><option>Ombros</option><option>Bíceps</option><option>Tríceps</option><option>Pernas</option><option>Abdômen</option><option>Cardio</option></select></div>
-    <div class="grid exercise-grid" id="exerciseGrid"></div>
-  </section>
+    <div class="menu-label">MENU PRINCIPAL</div>
+    <nav>
+      <button class="nav-item active" data-page="inicio">⌂ <span>Início</span></button>
+      <button class="nav-item" data-page="treinos">▣ <span>Treinos</span></button>
+      <button class="nav-item" data-page="montar">＋ <span>Montar treino</span></button>
+      <button class="nav-item" data-page="exercicios">◉ <span>Exercícios</span></button>
+      <button class="nav-item" data-page="evolucao">↗ <span>Minha evolução</span></button>
+      <button class="nav-item" data-page="calendario">▦ <span>Calendário</span></button>
+      <button class="nav-item" data-page="perfil">♙ <span>Meu perfil</span></button>
+    </nav>
 
-  <section class="page" id="page-builder">
-    <div class="page-title"><div><div class="eyebrow">DO SEU JEITO</div><h2>Monte seu treino</h2><p>Escolha exercícios, configure séries, repetições e descanso.</p></div><button class="btn btn-primary" onclick="saveWorkout()">SALVAR TREINO</button></div>
-    <div class="grid builder-layout">
-      <div class="card"><div class="section-head"><h3>Adicionar exercícios</h3><span>BIBLIOTECA</span></div><input class="search" id="builderSearch" placeholder="Buscar exercício..." oninput="renderBuilderLibrary()" style="margin-bottom:9px"><div id="builderLibrary"></div></div>
-      <div class="card"><div class="section-head"><h3>Seu treino</h3><span id="builderCount">0 EXERCÍCIOS</span></div>
-        <div class="field" style="margin-bottom:12px"><label>Nome do treino</label><input id="workoutName" placeholder="Ex.: Treino A — Peito e tríceps"></div>
-        <div id="builderItems"><div class="empty">Adicione exercícios para começar.</div></div>
-        <div class="field" style="margin-top:12px"><label>Observações</label><textarea id="workoutNotes" placeholder="Ex.: priorizar execução controlada..."></textarea></div>
-        <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="saveWorkout()">SALVAR MEU TREINO</button>
-        <div id="savedWorkouts" style="margin-top:18px"></div>
+    <div class="sidebar-bottom">
+      <div class="pro-card">
+        <span>SEU OBJETIVO</span>
+        <h3 id="sideGoal">Ganhar músculos</h3>
+        <p>Um passo de cada vez. Não pare!</p>
       </div>
+      <small>PERSONAL PRO © 2026</small>
     </div>
-  </section>
+  </aside>
 
-  <section class="page" id="page-session">
-    <div class="session-box">
-      <div class="session-top"><button class="btn btn-ghost btn-small" onclick="leaveSession()">← SAIR DO TREINO</button><span class="eyebrow">SESSÃO EM ANDAMENTO</span></div>
-      <div class="card">
-        <div class="goal-row"><span id="sessionWorkoutName">Treino</span><strong id="sessionProgressText">0 / 0</strong></div><div class="progress-track"><span id="sessionProgress" style="width:0%"></span></div>
-        <div class="session-exercise"><div class="session-emoji" id="sessionEmoji">🏋️</div><h2 id="sessionExercise">Exercício</h2><p id="sessionMuscle">Grupo muscular</p></div>
-        <div class="session-numbers"><div class="session-number"><strong id="sessionSet">1/3</strong><small>SÉRIE</small></div><div class="session-number"><strong id="sessionReps">12</strong><small>REPETIÇÕES</small></div><div class="session-number"><strong id="sessionLoad">—</strong><small>CARGA (KG)</small></div></div>
-        <div class="section-head"><h3>Descanso</h3><span>CRONÔMETRO</span></div><div class="timer" id="restTimer">01:00</div>
-        <div class="session-actions"><button class="btn btn-secondary" onclick="startRest()">▶ INICIAR DESCANSO</button><button class="btn btn-primary" onclick="completeSet()">✓ CONCLUIR SÉRIE</button><button class="btn btn-ghost" onclick="nextExercise()">PRÓXIMO EXERCÍCIO →</button></div>
-        <p class="muted small" style="text-align:center;margin:17px 0 0">Registre a carga no montador de treinos. Respeite seus limites e interrompa se sentir dor.</p>
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <span class="top-label">SUA JORNADA FITNESS</span>
+        <h2 id="pageTitle">Visão geral</h2>
       </div>
-    </div>
-  </section>
+      <div class="user-area">
+        <div class="online-dot"></div>
+        <div class="user-info">
+          <strong id="headerName">Aluno</strong>
+          <small>Área do aluno</small>
+        </div>
+        <div class="avatar" id="avatar">A</div>
+      </div>
+    </header>
 
-  <section class="page" id="page-progress">
-    <div class="page-title"><div><div class="eyebrow">CADA PASSO CONTA</div><h2>Minha evolução</h2><p>Registre suas medidas e acompanhe seus resultados ao longo do tempo.</p></div><button class="btn btn-primary" onclick="openMeasureModal()">＋ NOVO REGISTRO</button></div>
-    <div class="grid stats"><div class="card"><div class="stat-head">PESO ATUAL</div><div class="stat-value" id="progressWeight">—</div><div class="stat-foot">kg</div></div><div class="card"><div class="stat-head">REGISTROS</div><div class="stat-value" id="progressRecords">0</div><div class="stat-foot">avaliações salvas</div></div><div class="card"><div class="stat-head">TREINOS CONCLUÍDOS</div><div class="stat-value" id="progressSessions">0</div><div class="stat-foot">histórico total</div></div><div class="card"><div class="stat-head">META</div><div class="stat-value" id="progressGoal">—</div><div class="stat-foot">peso desejado (kg)</div></div></div>
-    <div class="grid two-col"><div class="card"><div class="section-head"><h3>Histórico de peso</h3><span>KG</span></div><div class="chart-wrap"><canvas id="progressChart"></canvas></div></div><div class="card"><div class="section-head"><h3>Medidas corporais</h3><span>ÚLTIMO REGISTRO</span></div><div id="measureSummary" class="record-list"><div class="empty">Nenhuma medida registrada.</div></div></div></div>
-    <div class="card" style="margin-top:15px"><div class="section-head"><h3>Histórico de avaliações</h3><span>SEUS REGISTROS</span></div><div id="measureHistory" class="record-list"><div class="empty">Seus registros aparecerão aqui.</div></div></div>
-  </section>
+    <!-- INÍCIO -->
+    <section class="page active" id="inicio">
 
-  <section class="page" id="page-profile">
-    <div class="page-title"><div><div class="eyebrow">SUA JORNADA</div><h2>Meu perfil</h2><p>Informações utilizadas para personalizar sua experiência.</p></div></div>
-    <div class="card"><form id="profileForm" onsubmit="saveProfile(event)"><div class="form-grid">
-      <div class="field"><label>Nome</label><input id="pName" required placeholder="Seu nome"></div>
-      <div class="field"><label>Idade</label><input id="pAge" type="number" min="14" max="100" placeholder="Ex.: 28"></div>
-      <div class="field"><label>Sexo (para estimativas)</label><select id="pSex"><option value="">Prefiro não informar</option><option value="masculino">Masculino</option><option value="feminino">Feminino</option><option value="outro">Outro</option></select></div>
-      <div class="field"><label>Altura (cm)</label><input id="pHeight" type="number" min="100" max="230" placeholder="Ex.: 175"></div>
-      <div class="field"><label>Peso atual (kg)</label><input id="pWeight" type="number" min="25" max="350" step=".1" placeholder="Ex.: 78"></div>
-      <div class="field"><label>Peso desejado (kg)</label><input id="pGoal" type="number" min="25" max="350" step=".1" placeholder="Ex.: 72"></div>
-      <div class="field"><label>Experiência</label><select id="pLevel"><option>Iniciante</option><option>Intermediário</option><option>Avançado</option></select></div>
-      <div class="field"><label>Dias disponíveis por semana</label><select id="pDays"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option></select></div>
-      <div class="field"><label>Tempo por treino (minutos)</label><select id="pTime"><option>30</option><option>45</option><option selected>60</option><option>75</option><option>90</option></select></div>
-      <div class="field"><label>Local de treino</label><select id="pPlace"><option>Academia</option><option>Casa</option><option>Ar livre</option></select></div>
-      <div class="field"><label>Objetivo principal</label><select id="pGoalType"><option>Hipertrofia</option><option>Emagrecimento</option><option>Condicionamento físico</option><option>Saúde e bem-estar</option></select></div>
-      <div class="field"><label>Equipamentos disponíveis</label><input id="pEquipment" placeholder="Ex.: halteres, barras, máquinas"></div>
-      <div class="field full"><label>Grupos musculares prioritários</label><input id="pMuscles" placeholder="Ex.: peito, costas, pernas e ombros"></div>
-      <div class="field full"><label>Limitações, lesões ou exercícios que deve evitar</label><textarea id="pLimits" placeholder="Descreva suas limitações. Se não houver, deixe em branco."></textarea></div>
-    </div><div style="display:flex;justify-content:flex-end;margin-top:18px"><button class="btn btn-primary">SALVAR MEU PERFIL</button></div></form></div>
-  </section>
+      <div class="hero">
+        <div class="hero-content">
+          <span class="eyebrow">SEU TREINAMENTO COMEÇA AQUI</span>
+          <h1>SEU LIMITE É<br><span>SÓ O COMEÇO.</span></h1>
+          <p>Disciplina, consistência e evolução. Seu personal trainer está pronto para acompanhar sua jornada.</p>
+          <button class="btn-primary" onclick="showPage('treinos')">VER MEUS TREINOS →</button>
+        </div>
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200" alt="">
+        <div class="hero-overlay"></div>
+      </div>
 
-  <section class="page" id="page-calories">
-    <div class="page-title"><div><div class="eyebrow">ESTIMATIVA DE ATIVIDADE</div><h2>Calculadora de calorias</h2><p>Estimativa baseada em MET, peso corporal e duração da atividade.</p></div></div>
-    <div class="grid two-col"><div class="card"><form id="calorieForm" onsubmit="calculateCalories(event)"><div class="form-grid">
-      <div class="field full"><label>Atividade</label><select id="calActivity"><option value="3.5">Musculação leve (3,5 MET)</option><option value="5">Musculação moderada (5 MET)</option><option value="6">Musculação intensa (6 MET)</option><option value="3.5">Caminhada moderada (3,5 MET)</option><option value="7">Corrida leve (7 MET)</option><option value="8">Bicicleta moderada (8 MET)</option><option value="5">Elíptico moderado (5 MET)</option><option value="8">Subir escadas (8 MET)</option><option value="4">Treino funcional moderado (4 MET)</option></select></div>
-      <div class="field"><label>Peso corporal (kg)</label><input id="calWeight" type="number" min="25" max="350" step=".1" required></div>
-      <div class="field"><label>Duração (minutos)</label><input id="calDuration" type="number" min="1" max="600" required placeholder="Ex.: 45"></div>
-      <div class="field full"><label>Intensidade percebida</label><select id="calIntensity"><option value="0.9">Leve</option><option value="1">Moderada</option><option value="1.1">Intensa</option></select></div>
-    </div><button class="btn btn-primary" style="width:100%;margin-top:17px">CALCULAR ESTIMATIVA</button></form></div>
-    <div class="card"><div class="eyebrow">RESULTADO ESTIMADO</div><div class="stat-value" id="calResult" style="font-size:48px;margin-top:20px">—</div><div class="muted small">quilocalorias (kcal)</div><p class="muted small" id="calExplain" style="line-height:1.7;margin-top:18px">Preencha os dados para calcular uma estimativa de gasto energético.</p><div class="local-pill">Cálculo informativo por MET</div></div></div>
-    <p class="muted small" style="margin-top:14px;line-height:1.7">A estimativa utiliza a fórmula aproximada: kcal = MET × 3,5 × peso (kg) ÷ 200 × minutos. O resultado não é uma medição exata e pode variar conforme condicionamento, técnica, intensidade real e características individuais.</p>
-  </section>
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">ACOMPANHAMENTO</span>
+          <h2>Seu desempenho</h2>
+        </div>
+        <span class="live-tag">● DADOS LOCAIS</span>
+      </div>
 
-  <section class="page" id="page-assistant">
-    <div class="page-title"><div><div class="eyebrow">ORIENTAÇÃO INTELIGENTE</div><h2>Personal inteligente</h2><p>Orientações iniciais e dicas de treinamento. A conexão com IA será adicionada na próxima etapa.</p></div></div>
-    <div class="grid two-col"><div class="card"><div class="section-head"><h3>Como posso ajudar?</h3><span>GUIA PERSONAL PRO</span></div><div class="chips" id="assistantChips"><button class="chip" onclick="askCoach('Como começar na musculação?')">Começar na musculação</button><button class="chip" onclick="askCoach('Como progredir cargas com segurança?')">Progredir cargas</button><button class="chip" onclick="askCoach('Como organizar meus dias de treino?')">Organizar a semana</button><button class="chip" onclick="askCoach('Como melhorar a recuperação?')">Recuperação</button></div><div class="field" style="margin-top:17px"><label>Sua dúvida</label><textarea id="coachQuestion" placeholder="Escreva sua pergunta sobre treino..."></textarea></div><button class="btn btn-primary" style="margin-top:10px" onclick="submitCoach()">ENVIAR PERGUNTA</button></div><div class="card"><div class="section-head"><h3>Resposta do assistente</h3><span>ORIENTAÇÃO LOCAL</span></div><div id="coachAnswer" class="muted" style="font-size:12px;line-height:1.8">Olá! Sou o guia inicial do PERSONAL PRO. Escolha um tema ou escreva sua dúvida. Nesta versão, as respostas são orientações pré-configuradas; a IA conectada será implementada depois.</div></div></div>
-    <div class="card" style="margin-top:15px"><strong style="font-size:12px">Aviso importante</strong><p class="muted small" style="line-height:1.7">Este aplicativo oferece informações gerais de atividade física e não substitui avaliação de médico, fisioterapeuta, nutricionista ou profissional de educação física. Não treine com dor, não force cargas e procure orientação qualificada diante de lesões ou condições clínicas.</p></div>
-  </section>
-</main>
-<nav class="bottom-nav" id="bottomNav"><button class="active" data-page="home"><span>⌂</span>INÍCIO</button><button data-page="training"><span>◈</span>TREINOS</button><button data-page="builder"><span>＋</span>CRIAR</button><button data-page="progress"><span>↗</span>EVOLUÇÃO</button><button data-page="profile"><span>◎</span>PERFIL</button></nav>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span>PESO ATUAL</span>
+          <h2><b id="weightStat">--</b> <small>kg</small></h2>
+          <p>Seu registro mais recente</p>
+        </div>
+        <div class="stat-card">
+          <span>META DE PESO</span>
+          <h2><b id="goalStat">--</b> <small>kg</small></h2>
+          <p>Seu objetivo pessoal</p>
+        </div>
+        <div class="stat-card">
+          <span>TREINOS REALIZADOS</span>
+          <h2><b id="workoutStat">0</b></h2>
+          <p>Treinos concluídos</p>
+        </div>
+        <div class="stat-card">
+          <span>TEMPO DE ATIVIDADE</span>
+          <h2><b id="timeStat">0</b> <small>min</small></h2>
+          <p>Tempo registrado</p>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">SEU PLANEJAMENTO</span>
+              <h3>Treino recomendado</h3>
+            </div>
+            <span class="tag-green">HOJE</span>
+          </div>
+          <div class="recommendation">
+            <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600" alt="">
+            <div>
+              <h3>Treino de força</h3>
+              <p>Exercícios de musculação para desenvolver força e resistência.</p>
+              <button class="btn-small" onclick="showPage('treinos')">VER TREINOS →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <span class="eyebrow">ACOMPANHE SUA JORNADA</span>
+          <h3>Progresso semanal</h3>
+          <div class="progress-number" id="weeklyProgress">0%</div>
+          <div class="progress-track"><div id="weeklyBar"></div></div>
+          <p class="muted">Meta inicial: 4 treinos por semana.</p>
+          <button class="btn-outline" onclick="showPage('evolucao')">VER EVOLUÇÃO</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">COMECE AGORA</span>
+            <h3>Escolha seu objetivo</h3>
+          </div>
+        </div>
+        <div class="objective-grid">
+          <button class="objective-card" onclick="setGoal('Hipertrofia')">
+            <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500" alt="">
+            <strong>HIPERTROFIA</strong>
+            <small>Ganhar massa muscular</small>
+          </button>
+          <button class="objective-card" onclick="setGoal('Emagrecimento')">
+            <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=500" alt="">
+            <strong>EMAGRECIMENTO</strong>
+            <small>Reduzir gordura corporal</small>
+          </button>
+          <button class="objective-card" onclick="setGoal('Condicionamento')">
+            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500" alt="">
+            <strong>CONDICIONAMENTO</strong>
+            <small>Melhorar resistência física</small>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TREINOS -->
+    <section class="page" id="treinos">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">PLANEJAMENTO FITNESS</span>
+          <h2>Meus treinos</h2>
+        </div>
+      </div>
+      <div class="category-grid">
+        <button onclick="filterExercises('Peito')">PEITO</button>
+        <button onclick="filterExercises('Costas')">COSTAS</button>
+        <button onclick="filterExercises('Pernas')">PERNAS</button>
+        <button onclick="filterExercises('Ombros')">OMBROS</button>
+        <button onclick="filterExercises('Abdômen')">ABDÔMEN</button>
+        <button onclick="filterExercises('Cardio')">CARDIO</button>
+        <button onclick="filterExercises('Todos')">TODOS</button>
+      </div>
+      <div class="panel">
+        <h3>Biblioteca de treinos</h3>
+        <p class="muted">Escolha uma categoria para visualizar os exercícios disponíveis.</p>
+        <div id="trainingExercises" class="exercise-grid"></div>
+      </div>
+    </section>
+
+    <!-- MONTAR TREINO -->
+    <section class="page" id="montar">
+      <span class="eyebrow">PERSONALIZE SUA ROTINA</span>
+      <h2>Monte seu treino</h2>
+      <div class="panel">
+        <label>Nome do treino</label>
+        <input id="trainingName" placeholder="Ex.: Treino A - Peito e tríceps">
+        <label>Adicionar exercício</label>
+        <select id="exerciseSelect"></select>
+        <div class="form-grid">
+          <div><label>Séries</label><input type="number" id="sets" value="3" min="1"></div>
+          <div><label>Repetições</label><input type="number" id="reps" value="12" min="1"></div>
+          <div><label>Carga (kg)</label><input type="number" id="load" value="0" min="0" step="0.5"></div>
+          <div><label>Descanso (segundos)</label><input type="number" id="rest" value="60" min="0"></div>
+        </div>
+        <button class="btn-primary" onclick="addExercise()">+ ADICIONAR EXERCÍCIO</button>
+      </div>
+      <div class="panel">
+        <div class="panel-heading"><h3>Seu treino personalizado</h3><span id="exerciseCount" class="tag-green">0 exercícios</span></div>
+        <div id="builderList"></div>
+        <button class="btn-primary" onclick="saveWorkout()">SALVAR TREINO</button>
+      </div>
+      <div class="panel">
+        <h3>Treinos salvos</h3>
+        <div id="savedWorkouts"></div>
+      </div>
+    </section>
+
+    <!-- EXERCÍCIOS -->
+    <section class="page" id="exercicios">
+      <span class="eyebrow">CONHECIMENTO E TÉCNICA</span>
+      <h2>Biblioteca de exercícios</h2>
+      <input id="exerciseSearch" placeholder="Pesquisar exercício..." oninput="renderExercises()">
+      <div id="exerciseLibrary" class="exercise-grid"></div>
+    </section>
+
+    <!-- EVOLUÇÃO -->
+    <section class="page" id="evolucao">
+      <span class="eyebrow">SEUS RESULTADOS</span>
+      <h2>Minha evolução</h2>
+      <div class="panel">
+        <h3>Registrar novo peso</h3>
+        <div class="form-grid">
+          <div><label>Peso atual (kg)</label><input type="number" id="newWeight" step="0.1" placeholder="Ex.: 80"></div>
+          <div><label>Cintura (cm)</label><input type="number" id="newWaist" step="0.1" placeholder="Opcional"></div>
+        </div>
+        <button class="btn-primary" onclick="recordProgress()">REGISTRAR EVOLUÇÃO</button>
+      </div>
+      <div class="panel">
+        <h3>Histórico de peso</h3>
+        <div id="weightHistory"></div>
+      </div>
+      <div class="panel">
+        <h3>Histórico de treinos</h3>
+        <div id="workoutHistory"></div>
+      </div>
+    </section>
+
+    <!-- CALENDÁRIO -->
+    <section class="page" id="calendario">
+      <span class="eyebrow">ORGANIZAÇÃO</span>
+      <h2>Calendário de atividades</h2>
+      <div class="panel">
+        <h3>Seu histórico</h3>
+        <div id="calendarHistory"></div>
+      </div>
+    </section>
+
+    <!-- PERFIL -->
+    <section class="page" id="perfil">
+      <span class="eyebrow">DADOS PESSOAIS</span>
+      <h2>Meu perfil</h2>
+      <div class="panel">
+        <div class="form-grid">
+          <div><label>Nome</label><input id="profileName" placeholder="Seu nome"></div>
+          <div><label>Idade</label><input id="age" type="number" min="1"></div>
+          <div><label>Altura (cm)</label><input id="height" type="number" min="1"></div>
+          <div><label>Peso atual (kg)</label><input id="profileWeight" type="number" step="0.1"></div>
+          <div><label>Peso desejado (kg)</label><input id="targetWeight" type="number" step="0.1"></div>
+          <div>
+            <label>Objetivo</label>
+            <select id="profileGoal">
+              <option value="Hipertrofia">Hipertrofia</option>
+              <option value="Emagrecimento">Emagrecimento</option>
+              <option value="Condicionamento">Condicionamento</option>
+            </select>
+          </div>
+          <div>
+            <label>Nível</label>
+            <select id="level">
+              <option>Iniciante</option>
+              <option>Intermediário</option>
+              <option>Avançado</option>
+            </select>
+          </div>
+          <div>
+            <label>Local de treino</label>
+            <select id="location">
+              <option>Academia</option>
+              <option>Casa</option>
+            </select>
+          </div>
+        </div>
+        <label>Limitações físicas ou observações</label>
+        <textarea id="limitations" placeholder="Informe exercícios que deve evitar, limitações ou observações importantes."></textarea>
+        <button class="btn-primary" onclick="saveProfile()">SALVAR MEU PERFIL</button>
+      </div>
+    </section>
+
+  </main>
 </div>
-<div class="toast" id="toast"></div>
-<div class="modal-backdrop" id="measureModal"><div class="modal"><div class="modal-head"><h3>Novo registro de evolução</h3><button class="close" onclick="closeMeasureModal()">×</button></div><form id="measureForm" onsubmit="saveMeasure(event)"><div class="form-grid">
-<div class="field"><label>Peso (kg)</label><input id="mWeight" type="number" min="25" max="350" step=".1"></div><div class="field"><label>Cintura (cm)</label><input id="mWaist" type="number" min="20" max="250" step=".1"></div>
-<div class="field"><label>Abdômen (cm)</label><input id="mAbdomen" type="number" min="20" max="250" step=".1"></div><div class="field"><label>Peito (cm)</label><input id="mChest" type="number" min="20" max="250" step=".1"></div>
-<div class="field"><label>Braço (cm)</label><input id="mArm" type="number" min="10" max="100" step=".1"></div><div class="field"><label>Perna (cm)</label><input id="mLeg" type="number" min="20" max="150" step=".1"></div>
-</div><button class="btn btn-primary" style="margin-top:17px;width:100%">SALVAR REGISTRO</button></form></div></div>
 
-<script>
-const KEY='personalProLocal_v1';
-const defaults={
- profile:{name:'',age:'',sex:'',height:'',weight:'',goal:'',level:'Iniciante',days:'4',time:'60',place:'Academia',goalType:'Hipertrofia',equipment:'',muscles:'',limits:''},
- workouts:[],sessions:[],measurements:[],builder:[],activeSession:null
-};
-let data=loadData(), restInterval=null, restRemaining=60, currentPage='home';
-const exercises=[
- {name:'Supino reto com barra',muscle:'Peito',secondary:'Tríceps e ombros',equip:'Barra e banco',level:'Intermediário',emoji:'🏋️',category:'Hipertrofia',sets:3,reps:10,rest:90,tip:'Mantenha os pés firmes no chão, escápulas estáveis e desça a barra com controle até a região média do peito. Empurre sem perder o alinhamento dos punhos.',breath:'Inspire na descida e expire ao empurrar.',errors:'Quicar a barra no peito ou abrir excessivamente os cotovelos.'},
- {name:'Flexão de braços',muscle:'Peito',secondary:'Tríceps e ombros',equip:'Peso corporal',level:'Iniciante',emoji:'🤸',category:'Hipertrofia',sets:3,reps:10,rest:60,tip:'Alinhe cabeça, tronco e quadril. Desça o peito com controle e empurre o chão.',breath:'Inspire ao descer e expire ao subir.',errors:'Deixar o quadril cair ou elevar demais o quadril.'},
- {name:'Puxada frontal',muscle:'Costas',secondary:'Bíceps',equip:'Polia alta',level:'Iniciante',emoji:'🧗',category:'Hipertrofia',sets:3,reps:12,rest:75,tip:'Puxe a barra em direção à parte superior do peito, conduzindo os cotovelos para baixo sem balançar o tronco.',breath:'Expire ao puxar e inspire ao retornar.',errors:'Puxar atrás da nuca ou usar impulso excessivo.'},
- {name:'Remada baixa',muscle:'Costas',secondary:'Bíceps',equip:'Polia baixa',level:'Iniciante',emoji:'🚣',category:'Hipertrofia',sets:3,reps:12,rest:75,tip:'Mantenha coluna neutra e conduza os cotovelos para trás, aproximando as escápulas sem arredondar as costas.',breath:'Expire na puxada e inspire no retorno.',errors:'Arredondar a lombar ou usar balanço.'},
- {name:'Desenvolvimento com halteres',muscle:'Ombros',secondary:'Tríceps',equip:'Halteres',level:'Intermediário',emoji:'🏋️',category:'Hipertrofia',sets:3,reps:10,rest:90,tip:'Com os halteres na altura dos ombros, empurre para cima mantendo abdômen firme e sem arquear a lombar.',breath:'Expire ao elevar e inspire ao descer.',errors:'Compensar com a lombar ou perder o controle.'},
- {name:'Elevação lateral',muscle:'Ombros',secondary:'Trapézio',equip:'Halteres',level:'Iniciante',emoji:'💪',category:'Hipertrofia',sets:3,reps:12,rest:60,tip:'Eleve os braços lateralmente até próximo da linha dos ombros, com cotovelos levemente flexionados e movimento controlado.',breath:'Expire ao elevar e inspire ao baixar.',errors:'Usar impulso ou elevar os ombros.'},
- {name:'Rosca direta',muscle:'Bíceps',secondary:'Braquial e antebraço',equip:'Barra ou halteres',level:'Iniciante',emoji:'💪',category:'Hipertrofia',sets:3,reps:12,rest:60,tip:'Mantenha cotovelos próximos ao tronco e flexione os braços sem balançar o corpo.',breath:'Expire ao flexionar e inspire ao estender.',errors:'Balançar o tronco ou projetar os cotovelos.'},
- {name:'Tríceps na polia',muscle:'Tríceps',secondary:'—',equip:'Polia alta',level:'Iniciante',emoji:'🏋️',category:'Hipertrofia',sets:3,reps:12,rest:60,tip:'Mantenha cotovelos junto ao corpo e estenda os braços sem movimentar os ombros.',breath:'Expire ao estender e inspire ao retornar.',errors:'Abrir os cotovelos ou inclinar o tronco em excesso.'},
- {name:'Agachamento livre',muscle:'Pernas',secondary:'Glúteos e core',equip:'Peso corporal ou barra',level:'Intermediário',emoji:'🦵',category:'Hipertrofia',sets:3,reps:10,rest:120,tip:'Afaste os pés aproximadamente na largura dos ombros. Flexione quadris e joelhos mantendo os pés apoiados e coluna neutra.',breath:'Inspire na descida e expire ao subir.',errors:'Perder o apoio dos pés ou deixar os joelhos colapsarem para dentro.'},
- {name:'Leg press',muscle:'Pernas',secondary:'Glúteos',equip:'Máquina leg press',level:'Iniciante',emoji:'🦿',category:'Hipertrofia',sets:3,reps:12,rest:90,tip:'Mantenha quadril apoiado no encosto e desça a plataforma apenas até onde consiga preservar o alinhamento e controle.',breath:'Inspire ao descer e expire ao empurrar.',errors:'Travar os joelhos ou retirar o quadril do encosto.'},
- {name:'Mesa flexora',muscle:'Pernas',secondary:'Posterior de coxa',equip:'Máquina',level:'Iniciante',emoji:'🦵',category:'Hipertrofia',sets:3,reps:12,rest:75,tip:'Ajuste o rolo acima dos calcanhares e flexione os joelhos sem tirar o quadril do apoio.',breath:'Expire ao flexionar e inspire ao retornar.',errors:'Usar impulso ou amplitude desconfortável.'},
- {name:'Elevação pélvica',muscle:'Pernas',secondary:'Glúteos e posteriores',equip:'Banco e carga opcional',level:'Iniciante',emoji:'🍑',category:'Hipertrofia',sets:3,reps:12,rest:75,tip:'Apoie a parte superior das costas no banco, pés firmes e eleve o quadril até alinhar tronco e coxas, sem hiperestender a lombar.',breath:'Expire ao elevar e inspire ao descer.',errors:'Arquear a lombar no topo.'},
- {name:'Prancha',muscle:'Abdômen',secondary:'Core e ombros',equip:'Colchonete',level:'Iniciante',emoji:'🧘',category:'Abdômen',sets:3,reps:'30 s',rest:45,tip:'Apoie antebraços e pontas dos pés, mantendo cabeça, tronco e quadril alinhados. Contraia abdômen e glúteos.',breath:'Respire continuamente, sem prender o ar.',errors:'Deixar a lombar afundar ou elevar demais o quadril.'},
- {name:'Abdominal bicicleta',muscle:'Abdômen',secondary:'Oblíquos',equip:'Colchonete',level:'Intermediário',emoji:'🚴',category:'Abdômen',sets:3,reps:16,rest:45,tip:'Alterne a aproximação do cotovelo ao joelho oposto, girando o tronco com controle e sem puxar a cabeça.',breath:'Expire durante a rotação.',errors:'Puxar o pescoço ou acelerar sem controle.'},
- {name:'Dead bug',muscle:'Abdômen',secondary:'Core profundo',equip:'Colchonete',level:'Iniciante',emoji:'🪲',category:'Abdômen',sets:3,reps:10,rest:45,tip:'Deitado, mantenha lombar estável e estenda braço e perna opostos sem perder o controle do tronco.',breath:'Expire ao estender e inspire ao retornar.',errors:'Permitir que a lombar arqueie.'},
- {name:'Caminhada moderada',muscle:'Cardio',secondary:'Sistema cardiovascular',equip:'Esteira ou ambiente externo',level:'Iniciante',emoji:'🚶',category:'Cardio',sets:1,reps:'20 min',rest:0,tip:'Mantenha ritmo confortável, postura natural e aumente duração gradualmente conforme condicionamento.',breath:'Respiração contínua; deve conseguir conversar.',errors:'Começar em intensidade alta sem aquecimento.'},
- {name:'Bicicleta ergométrica',muscle:'Cardio',secondary:'Pernas',equip:'Bicicleta',level:'Iniciante',emoji:'🚴',category:'Cardio',sets:1,reps:'20 min',rest:0,tip:'Ajuste o banco para que o joelho permaneça levemente flexionado no ponto mais baixo da pedalada.',breath:'Respire de forma regular.',errors:'Banco muito baixo ou resistência excessiva.'},
- {name:'Mountain climber',muscle:'Abdômen',secondary:'Ombros e cardio',equip:'Peso corporal',level:'Intermediário',emoji:'⛰️',category:'Abdômen',sets:3,reps:20,rest:45,tip:'Em posição de prancha alta, alterne os joelhos em direção ao peito mantendo o tronco estável.',breath:'Respire continuamente.',errors:'Elevar demais o quadril ou perder estabilidade.'}
-];
-function loadData(){try{return {...structuredClone(defaults),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(defaults)}}
-function persist(){localStorage.setItem(KEY,JSON.stringify(data))}
-function toast(msg){let el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2400)}
-function navigate(page){if(page==='session'&&!data.activeSession)return;currentPage=page;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const titles={home:'Painel do aluno',training:'Central de treinos',builder:'Montar treino',progress:'Minha evolução',profile:'Meu perfil',calories:'Calculadora de calorias',assistant:'Personal inteligente',session:'Treino em andamento'};document.getElementById('pageHeading').textContent=titles[page]||'PERSONAL PRO';if(page==='home')renderDashboard();if(page==='training')renderExercises();if(page==='builder'){renderBuilderLibrary();renderBuilderItems();renderSavedWorkouts()}if(page==='progress')renderProgress();if(page==='profile')fillProfile();if(page==='calories')document.getElementById('calWeight').value=data.profile.weight||'';if(page==='session')renderSession();window.scrollTo(0,0)}
-document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
-function weekSessions(){let now=new Date(),start=new Date(now);start.setDate(now.getDate()-((now.getDay()+6)%7));start.setHours(0,0,0,0);return data.sessions.filter(s=>new Date(s.date)>=start)}
-function renderDashboard(){let p=data.profile;document.getElementById('helloName').textContent=p.name||'Atleta';document.getElementById('avatar').textContent=(p.name||'PP').split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();document.getElementById('statWeight').innerHTML=(p.weight||'—')+' <small style="font-size:13px">kg</small>';document.getElementById('statWeightFoot').textContent=p.goal?'Meta: '+p.goal+' kg':'Cadastre sua meta no perfil';let ws=weekSessions();document.getElementById('statWorkouts').textContent=ws.length;document.getElementById('statMinutes').innerHTML=ws.reduce((a,s)=>a+(s.minutes||0),0)+' <small style="font-size:13px">min</small>';document.getElementById('statCalories').textContent=ws.reduce((a,s)=>a+(s.calories||0),0).toLocaleString('pt-BR');document.getElementById('goalWeight').textContent=p.goal||'—';let pct=0;if(p.weight&&p.goal&&p.weight!==p.goal){let first=data.measurements[0]?.weight||Number(p.weight);pct=Math.min(100,Math.round(Math.abs((Number(p.weight)-Number(p.goal))/(first-Number(p.goal)||1))*100))}document.getElementById('goalProgress').style.width=pct+'%';document.getElementById('goalPercent').textContent=pct+'%';let last=data.workouts[data.workouts.length-1];document.getElementById('recommendedTitle').textContent=last?.name||'Comece montando seu treino';document.getElementById('recommendedDesc').textContent=last?last.items.length+' exercícios • Personalize sua próxima sessão':'Escolha os grupos musculares e organize sua rotina.';let recent=[...data.sessions].reverse().slice(0,4);document.getElementById('recentActivities').innerHTML=recent.length?recent.map(s=>`<div class="activity"><div class="activity-icon">✓</div><div><strong>${esc(s.name)}</strong><small>${new Date(s.date).toLocaleDateString('pt-BR')} • ${s.minutes} min</small></div><time>${s.calories||0} kcal</time></div>`).join(''):'<div class="empty">Suas atividades aparecerão aqui.</div>';drawChart('weightChart',data.measurements.map(m=>({label:new Date(m.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),value:Number(m.weight)})).slice(-8))}
-function drawChart(id,points){let c=document.getElementById(id);if(!c)return;let rect=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=Math.max(300,rect.width)*dpr;c.height=210*dpr;let ctx=c.getContext('2d');ctx.scale(dpr,dpr);let w=c.width/dpr,h=210,pad={l:32,r:10,t:15,b:27};ctx.clearRect(0,0,w,h);ctx.font='10px system-ui';ctx.strokeStyle='#28332a';ctx.fillStyle='#849087';for(let i=0;i<4;i++){let y=pad.t+(h-pad.t-pad.b)*i/3;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke()}if(points.length<1){ctx.fillText('Registre seu peso para visualizar a evolução',pad.l+5,h/2);return}let vals=points.map(p=>p.value),min=Math.min(...vals)-1,max=Math.max(...vals)+1;if(min===max){min-=1;max+=1}let x=i=>pad.l+(w-pad.l-pad.r)*(points.length===1?.5:i/(points.length-1));let y=v=>pad.t+(h-pad.t-pad.b)*(1-(v-min)/(max-min));ctx.strokeStyle='#b7ff36';ctx.lineWidth=2.5;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(x(i),y(p.value)):ctx.moveTo(x(i),y(p.value)));ctx.stroke();points.forEach((p,i)=>{ctx.fillStyle='#b7ff36';ctx.beginPath();ctx.arc(x(i),y(p.value),4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#aab5ab';ctx.textAlign='center';ctx.fillText(p.label,x(i),h-7)});ctx.textAlign='left'}
-function renderExercises(){let q=(document.getElementById('exerciseSearch')?.value||'').toLowerCase(),f=document.getElementById('exerciseFilter')?.value||'Todos';let list=exercises.filter(e=>(f==='Todos'||e.muscle===f||(f==='Pernas'&&e.muscle==='Pernas'))&&(`${e.name} ${e.muscle} ${e.secondary}`.toLowerCase().includes(q)));document.getElementById('exerciseCount').textContent=list.length+' EXERCÍCIOS';document.getElementById('exerciseGrid').innerHTML=list.map((e)=>`<article class="card exercise-card"><div class="exercise-visual"><small>${e.level}</small>${e.emoji}</div><div class="exercise-body"><h4>${esc(e.name)}</h4><p>${esc(e.muscle)} • ${esc(e.equip)}</p><div class="exercise-meta"><span>${e.sets} séries × ${e.reps}</span><button class="btn btn-secondary btn-small" onclick="showExercise('${encodeURIComponent(e.name)}')">DETALHES</button></div></div></article>`).join('')||'<div class="empty">Nenhum exercício encontrado.</div>'}
-function filterExercises(category){document.getElementById('exerciseFilter').value=category==='Hipertrofia'?'Todos':category;document.getElementById('exerciseSearch').value='';navigate('training')}
-function showExercise(encoded){let e=exercises.find(x=>x.name===decodeURIComponent(encoded));if(!e)return;alert(`${e.name}\n\nMúsculo principal: ${e.muscle}\nSecundários: ${e.secondary}\nEquipamento: ${e.equip}\nNível: ${e.level}\n\nExecução: ${e.tip}\n\nRespiração: ${e.breath}\n\nErros comuns: ${e.errors}\n\nSugestão inicial: ${e.sets} séries • ${e.reps} repetições • descanso ${e.rest}s.\n\nAjuste com um profissional conforme sua condição e experiência.`)}
-function renderBuilderLibrary(){let q=(document.getElementById('builderSearch')?.value||'').toLowerCase();let list=exercises.filter(e=>`${e.name} ${e.muscle}`.toLowerCase().includes(q));document.getElementById('builderLibrary').innerHTML=list.map(e=>`<div class="exercise-pick"><div class="pick-icon">${e.emoji}</div><div class="pick-info"><strong>${esc(e.name)}</strong><small>${e.muscle} • ${e.level}</small></div><button class="btn btn-secondary btn-small" onclick="addExercise('${encodeURIComponent(e.name)}')">＋</button></div>`).join('')}
-function addExercise(encoded){let e=exercises.find(x=>x.name===decodeURIComponent(encoded));if(!e)return;data.builder.push({name:e.name,muscle:e.muscle,emoji:e.emoji,sets:e.sets,reps:e.reps,load:'',rest:e.rest});persist();renderBuilderItems();toast('Exercício adicionado!')}
-function renderBuilderItems(){let el=document.getElementById('builderItems');document.getElementById('builderCount').textContent=data.builder.length+' EXERCÍCIOS';if(!data.builder.length){el.innerHTML='<div class="empty">Adicione exercícios para começar.</div>';return}el.innerHTML=data.builder.map((it,i)=>`<div class="builder-item"><div class="builder-item-top"><strong>${i+1}. ${it.emoji} ${esc(it.name)}</strong><button class="btn btn-danger btn-small" onclick="removeBuilder(${i})">REMOVER</button></div><div class="inline-fields"><label>Séries<input type="number" min="1" max="20" value="${it.sets}" onchange="updateBuilder(${i},'sets',this.value)"></label><label>Repetições<input value="${it.reps}" onchange="updateBuilder(${i},'reps',this.value)"></label><label>Carga kg<input type="number" min="0" step=".5" value="${it.load}" placeholder="0" onchange="updateBuilder(${i},'load',this.value)"></label><label>Descanso s<input type="number" min="0" value="${it.rest}" onchange="updateBuilder(${i},'rest',this.value)"></label></div><div style="display:flex;gap:6px;margin-top:9px"><button class="btn btn-ghost btn-small" onclick="moveBuilder(${i},-1)">↑ subir</button><button class="btn btn-ghost btn-small" onclick="moveBuilder(${i},1)">↓ descer</button></div></div>`).join('')}
-function updateBuilder(i,k,v){data.builder[i][k]=v;persist()}
-function removeBuilder(i){data.builder.splice(i,1);persist();renderBuilderItems()}
-function moveBuilder(i,dir){let j=i+dir;if(j<0||j>=data.builder.length)return;[data.builder[i],data.builder[j]]=[data.builder[j],data.builder[i]];persist();renderBuilderItems()}
-function saveWorkout(){let name=document.getElementById('workoutName').value.trim();if(!name){toast('Dê um nome ao seu treino.');return}if(!data.builder.length){toast('Adicione pelo menos um exercício.');return}data.workouts.push({id:Date.now(),name,notes:document.getElementById('workoutNotes').value,items:JSON.parse(JSON.stringify(data.builder)),created:new Date().toISOString()});data.builder=[];persist();renderBuilderItems();renderSavedWorkouts();document.getElementById('workoutName').value='';document.getElementById('workoutNotes').value='';toast('Treino salvo com sucesso!')}
-function renderSavedWorkouts(){let el=document.getElementById('savedWorkouts');if(!el)return;el.innerHTML='<div class="section-head"><h3>Treinos salvos</h3><span>'+data.workouts.length+'</span></div>'+(data.workouts.length?data.workouts.slice().reverse().map(w=>`<div class="record"><div class="record-main"><strong>${esc(w.name)}</strong><small>${w.items.length} exercícios</small></div><button class="btn btn-primary btn-small" onclick="startWorkout(${w.id})">INICIAR</button><button class="btn btn-ghost btn-small" onclick="editWorkout(${w.id})">EDITAR</button></div>`).join(''):'<div class="empty">Seus treinos salvos aparecerão aqui.</div>')}
-function editWorkout(id){let w=data.workouts.find(x=>x.id===id);if(!w)return;data.builder=JSON.parse(JSON.stringify(w.items));document.getElementById('workoutName').value=w.name;document.getElementById('workoutNotes').value=w.notes||'';data.workouts=data.workouts.filter(x=>x.id!==id);persist();renderBuilderItems();renderSavedWorkouts();toast('Treino carregado para edição.')}
-function startWorkout(id){let w=data.workouts.find(x=>x.id===id);if(!w)return;data.activeSession={workoutId:id,name:w.name,items:JSON.parse(JSON.stringify(w.items)),index:0,set:1,started:Date.now()};persist();navigate('session')}
-function renderSession(){let s=data.activeSession;if(!s)return;let it=s.items[s.index];if(!it){finishWorkout();return}document.getElementById('sessionWorkoutName').textContent=s.name;document.getElementById('sessionProgressText').textContent=(s.index+1)+' / '+s.items.length;document.getElementById('sessionProgress').style.width=(s.index/s.items.length*100)+'%';document.getElementById('sessionEmoji').textContent=it.emoji;document.getElementById('sessionExercise').textContent=it.name;document.getElementById('sessionMuscle').textContent=it.muscle;document.getElementById('sessionSet').textContent=s.set+'/'+it.sets;document.getElementById('sessionReps').textContent=it.reps;document.getElementById('sessionLoad').textContent=it.load||'—';}
-function startRest(){clearInterval(restInterval);restRemaining=Number(data.activeSession?.items[data.activeSession.index]?.rest)||60;updateTimer();restInterval=setInterval(()=>{restRemaining--;updateTimer();if(restRemaining<=0){clearInterval(restInterval);toast('Descanso concluído!');}},1000)}
-function updateTimer(){document.getElementById('restTimer').textContent=String(Math.floor(restRemaining/60)).padStart(2,'0')+':'+String(restRemaining%60).padStart(2,'0')}
-function completeSet(){let s=data.activeSession;if(!s)return;let it=s.items[s.index];if(s.set<Number(it.sets)){s.set++;persist();renderSession();startRest()}else{nextExercise()}}
-function nextExercise(){let s=data.activeSession;if(!s)return;clearInterval(restInterval);s.index++;s.set=1;if(s.index>=s.items.length){finishWorkout();return}persist();renderSession();restRemaining=Number(s.items[s.index].rest)||60;updateTimer()}
-function finishWorkout(){clearInterval(restInterval);let s=data.activeSession;if(!s)return;let minutes=Math.max(1,Math.round((Date.now()-s.started)/60000));let weight=Number(data.profile.weight)||70;let calories=Math.round(5*3.5*weight/200*minutes);data.sessions.push({name:s.name,date:new Date().toISOString(),minutes,calories,items:s.items.length});data.activeSession=null;persist();alert(`Treino concluído!\\n\\n${s.name}\\nDuração: ${minutes} minutos\\nCalorias estimadas: ${calories} kcal\\nExercícios: ${s.items.length}\\n\\nParabéns pela consistência!`);navigate('home')}
-function leaveSession(){if(confirm('Deseja sair? O treino atual não será registrado como concluído.')){clearInterval(restInterval);data.activeSession=null;persist();navigate('home')}}
-function fillProfile(){let p=data.profile;for(let k of ['name','age','sex','height','weight','goal','level','days','time','place','goalType','equipment','muscles','limits']){let el=document.getElementById('p'+k[0].toUpperCase()+k.slice(1));if(el)el.value=p[k]??''}}
-function saveProfile(ev){ev.preventDefault();let p={};for(let k of ['name','age','sex','height','weight','goal','level','days','time','place','goalType','equipment','muscles','limits'])p[k]=document.getElementById('p'+k[0].toUpperCase()+k.slice(1)).value;data.profile=p;if(p.weight&&!data.measurements.length)data.measurements.push({date:new Date().toISOString(),weight:Number(p.weight)});persist();renderDashboard();toast('Perfil salvo com sucesso!');}
-function openProfile(){navigate('profile')}
-function openMeasureModal(){document.getElementById('measureModal').classList.add('show');document.getElementById('mWeight').value=data.profile.weight||''}
-function closeMeasureModal(){document.getElementById('measureModal').classList.remove('show')}
-function saveMeasure(ev){ev.preventDefault();let obj={date:new Date().toISOString()};for(let [k,id] of Object.entries({weight:'mWeight',waist:'mWaist',abdomen:'mAbdomen',chest:'mChest',arm:'mArm',leg:'mLeg'})){let v=document.getElementById(id).value;if(v)obj[k]=Number(v)}if(!obj.weight&&!obj.waist&&!obj.abdomen&&!obj.chest&&!obj.arm&&!obj.leg){toast('Informe pelo menos uma medida.');return}data.measurements.push(obj);if(obj.weight)data.profile.weight=obj.weight;persist();closeMeasureModal();renderProgress();renderDashboard();toast('Evolução registrada!')}
-function renderProgress(){let p=data.profile;document.getElementById('progressWeight').textContent=p.weight||'—';document.getElementById('progressRecords').textContent=data.measurements.length;document.getElementById('progressSessions').textContent=data.sessions.length;document.getElementById('progressGoal').textContent=p.goal||'—';let points=data.measurements.map(m=>({label:new Date(m.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),value:Number(m.weight)})).filter(x=>x.value);drawChart('progressChart',points.slice(-12));let latest=data.measurements[data.measurements.length-1];let labels={waist:'Cintura',abdomen:'Abdômen',chest:'Peito',arm:'Braço',leg:'Perna'};document.getElementById('measureSummary').innerHTML=latest?Object.entries(labels).filter(([k])=>latest[k]).map(([k,v])=>`<div class="record"><div class="record-main"><strong>${v}</strong></div><div class="record-value">${latest[k]} cm</div></div>`).join(''):'<div class="empty">Nenhuma medida registrada.</div>';document.getElementById('measureHistory').innerHTML=data.measurements.length?data.measurements.slice().reverse().map(m=>`<div class="record"><div class="record-main"><strong>${new Date(m.date).toLocaleDateString('pt-BR')}</strong><small>${Object.entries(labels).filter(([k])=>m[k]).map(([k,v])=>v+': '+m[k]+' cm').join(' • ')}</small></div><div class="record-value">${m.weight?m.weight+' kg':''}</div></div>`).join(''):'<div class="empty">Seus registros aparecerão aqui.</div>'}
-function calculateCalories(ev){ev.preventDefault();let met=Number(document.getElementById('calActivity').value)*Number(document.getElementById('calIntensity').value),w=Number(document.getElementById('calWeight').value),min=Number(document.getElementById('calDuration').value);if(!w||!min)return;let kcal=Math.round(met*3.5*w/200*min);document.getElementById('calResult').textContent=kcal.toLocaleString('pt-BR');document.getElementById('calExplain').textContent=`Estimativa para ${min} minutos de atividade, considerando ${w} kg e aproximadamente ${met.toFixed(1)} MET. O valor é aproximado e não representa calorias medidas diretamente.`}
-function askCoach(q){document.getElementById('coachQuestion').value=q;submitCoach()}
-function submitCoach(){let q=document.getElementById('coachQuestion').value.trim();if(!q){toast('Escreva sua dúvida primeiro.');return}let low=q.toLowerCase(),answer='';if(low.includes('começar')||low.includes('iniciante'))answer='Comece com uma rotina simples de corpo inteiro, 2 a 3 vezes por semana, priorizando aprender os movimentos. Use cargas leves a moderadas, faça aquecimento e aumente o desafio gradualmente. A orientação de um profissional ajuda a ajustar a técnica.';else if(low.includes('carga')||low.includes('progred'))answer='Aumente a carga somente quando conseguir completar todas as séries com boa técnica e controle. Faça pequenos aumentos, registre o desempenho e não sacrifique a amplitude ou a postura para levantar mais peso.';else if(low.includes('semana')||low.includes('organizar'))answer=`Seu perfil informa ${data.profile.days||'—'} dias disponíveis por semana e objetivo de ${data.profile.goalType||'não definido'}. Distribua os grupos musculares para permitir recuperação entre sessões. Evite treinar intensamente o mesmo grupo em dias consecutivos.`;else if(low.includes('recuper')||low.includes('descanso'))answer='A recuperação depende de sono adequado, alimentação suficiente, hidratação e intervalos entre sessões. Dor persistente, perda de força ou fadiga excessiva são sinais para reduzir a carga e procurar orientação profissional.';else if(low.includes('gordura')||low.includes('barriga')||low.includes('emagrec'))answer='A redução de gordura acontece de forma geral, não é possível escolher de onde o corpo vai perder gordura. Combine atividade física regular, musculação, atividade aeróbica e hábitos alimentares sustentáveis. Exercícios abdominais fortalecem o core, mas não eliminam gordura localizada.';else answer='Posso ajudar com princípios gerais: priorize técnica, progressão gradual, recuperação e consistência. Para orientar melhor, informe seu objetivo, experiência e quais exercícios ou situações deseja entender. Se houver dor, lesão ou condição clínica, procure um profissional qualificado.';document.getElementById('coachAnswer').textContent=answer}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-document.getElementById('todayDate').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
-window.addEventListener('resize',()=>{if(currentPage==='home')renderDashboard();if(currentPage==='progress')renderProgress()});
-renderDashboard();renderExercises();renderSavedWorkouts();if(!data.profile.name)setTimeout(()=>{if(confirm('Bem-vindo ao PERSONAL PRO! Deseja configurar seu perfil agora?'))navigate('profile')},500);
-</script>
+<!-- MODAL DE TREINO -->
+<div id="workoutModal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeWorkout()">×</button>
+    <span class="eyebrow">SESSÃO DE TREINAMENTO</span>
+    <h2 id="sessionTitle">Meu treino</h2>
+    <div id="sessionExercise"></div>
+    <div class="timer" id="timer">00:00</div>
+    <button class="btn-primary" id="completeSet" onclick="completeCurrentSet()">CONCLUIR SÉRIE</button>
+    <button class="btn-outline" onclick="nextExercise()">PRÓXIMO EXERCÍCIO →</button>
+    <button class="btn-outline" onclick="finishWorkout()">FINALIZAR TREINO</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
