@@ -395,7 +395,7 @@
       </div>
 
       <!-- BOTÃO PARA ABRIR A IA DA CÂMERA -->
-      <button class="btn-primary ai-launch-btn" onclick="openAiTrainerFromDetails()">📹 CORRIGIR POSTURA COM IA</button>
+      <button class="btn-primary ai-launch-btn" onclick="openAiTrainerFromDetails()">📹 GRAVAR E ANALISAR POSTURA</button>
 
       <div class="detail-warning" style="margin-top: 15px;">
         ⚠️ Respeite seus limites e interrompa o exercício se sentir dor.
@@ -406,25 +406,33 @@
   </div>
 </div>
 
-<!-- MODAL DA CÂMERA DE IA COM CONTROLES FLUTUANTES -->
+<!-- MODAL DA CÂMERA DE GRAVAÇÃO E ANÁLISE -->
 <div id="aiModal" class="modal">
   <div class="modal-content ai-modal-content">
     <button class="close-modal" onclick="closeAiTrainer()">×</button>
-    <span class="eyebrow">PERSONAL IA — CORRETOR EM TEMPO REAL</span>
-    <h2 id="aiExerciseTitle">Analisador de Postura</h2>
+    <span class="eyebrow">PERSONAL IA — GRAVADOR E CORRETOR</span>
+    <h2 id="aiExerciseTitle">Analisar Exercício</h2>
     
     <div class="camera-container">
-      <!-- RESULTADO DA FILMAGEM FIXADO EM LOCAL ESPECÍFICO (TOPO DA CÂMARA) -->
-      <div id="aiFeedback" class="ai-feedback-badge">Posicione-se em frente à câmara</div>
-      
       <video id="webcam" autoplay playsinline muted></video>
-      
-      <!-- BOTÃO DE TROCAR CÂMARA (FRONTAL / TRASEIRA) -->
       <button class="btn-switch-camera" onclick="switchCamera()" title="Mudar câmara">🔄 Mudar Câmara</button>
     </div>
 
-    <p class="muted text-center" style="margin-top: 15px; font-size: 11px;">O vídeo é processado apenas no seu telemóvel e nunca é gravado.</p>
-    <button class="btn-outline" onclick="closeAiTrainer()">FECHAR CÂMERA</button>
+    <!-- PAINEL DE CONTROLE DE GRAVAÇÃO (INICIAR / PARAR) -->
+    <div class="ai-controls-panel">
+      <button id="btnStartRecord" class="btn-primary btn-record" onclick="startRecordingAnalysis()">🔴 INICIAR GRAVAÇÃO</button>
+      <button id="btnStopRecord" class="btn-outline btn-stop" onclick="stopRecordingAnalysis()" style="display:none;">⏹ PARAR E VER RESULTADO</button>
+    </div>
+
+    <!-- RESULTADO EXIBIDO APÓS PARAR -->
+    <div id="aiResultBox" class="ai-result-box" style="display:none;">
+      <h3>📊 Relatório de Correção</h3>
+      <p id="aiResultText"></p>
+      <button class="btn-primary" onclick="resetAiModal()" style="margin-top: 12px;">GRAVAR NOVAMENTE</button>
+    </div>
+
+    <p class="muted text-center" style="margin-top: 12px; font-size: 11px;">O vídeo é processado apenas no seu telemóvel e nunca é gravado.</p>
+    <button class="btn-outline" onclick="closeAiTrainer()">FECHAR</button>
   </div>
 </div>
 
